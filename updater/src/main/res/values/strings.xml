@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">lazylibs.updater</string>
+    <string name="progress_dialog_downloading">Download New Version</string>
+    <string name="download_progress">download progress : %1$d</string>
+    <string name="download_success">download success！</string>
+    <string name="download_fail">download fail！</string>
+    <string name="download_file_is_empty">downloaded file is empty！</string>
+    <string name="downloading">downloading…</string>
+    <string name="download">Download</string>
+    <string name="continue_download">Continue Download</string>
+    <string name="found_new_version">New Version</string>
+    <string name="download_later">Later</string>
+    <string name="unwifi_tips">Check that your network is in a non-wifi state, download the new version will consume a certain amount of traffic, do you continue to download?</string>
+    <string name="dont_update">Cancel</string>
+    <string name="update_now">Update Now</string>
+    <string name="version_upgrade">Upgrade</string>
+    <string name="no_new_version">No Upgrade</string>
+</resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">版本更新</string>
+    <string name="get_info_fail">获取版本信息失败！</string>
+    <string name="ok">好的</string>
+    <string name="tips">提示</string>
+    <string name="download_now">马上下载</string>
+</resources>

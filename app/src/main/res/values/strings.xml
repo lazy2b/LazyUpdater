@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LazyUpdater</string>
+    <string name="get_info_fail">get version info fail！</string>
+    <string name="ok">ok</string>
+    <string name="tips">tips</string>
+    <string name="download_now">download now</string>
+</resources>
