@@ -13,7 +13,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_provider" />
+                android:resource="@xml/updater_file_provider" />
         </provider>
         <service android:name=".VersionUpdateService" />
     </application>

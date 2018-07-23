@@ -50,7 +50,7 @@ public class DownloadProgressDialogFragment extends DialogFragment implements Do
 //                }
 //            });
 //        }
-        progressDialog.setMessage(getString(R.string.progress_dialog_downloading));
+        progressDialog.setMessage(getString(R.string.updater_progress_dialog_downloading));
         progressDialog.show();
         return progressDialog;
     }

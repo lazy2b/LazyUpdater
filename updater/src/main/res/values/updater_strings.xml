@@ -1,0 +1,17 @@
+<resources>
+    <string name="updater_progress_dialog_downloading">Download New Version</string>
+    <string name="updater_download_progress">download progress : %1$d</string>
+    <string name="updater_download_success">download success！</string>
+    <string name="updater_download_fail">download fail！</string>
+    <string name="updater_download_file_is_empty">downloaded file is empty！</string>
+    <string name="updater_downloading">downloading…</string>
+    <string name="updater_download">Download</string>
+    <string name="updater_continue_download">Continue Download</string>
+    <string name="updater_found_new_version">New Version</string>
+    <string name="updater_download_later">Later</string>
+    <string name="updater_unwifi_tips">Check that your network is in a non-wifi state, download the new version will consume a certain amount of traffic, do you continue to download?</string>
+    <string name="updater_dont_update">Cancel</string>
+    <string name="updater_update_now">Update Now</string>
+    <string name="updater_version_upgrade">Upgrade</string>
+    <string name="updater_no_new_version">No Upgrade</string>
+</resources>

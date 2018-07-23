@@ -37,8 +37,10 @@ public class UpdateActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                tips(getString(R.string.get_info_fail));
-                VersionUpdateHelper.destroy(vHelper);
+                runOnUiThread(() -> {
+                    tips(getString(R.string.get_info_fail));
+                    VersionUpdateHelper.destroy(vHelper);
+                });
             }
 
             @Override

@@ -38,6 +38,9 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
     private boolean isInitialization = false;
     private boolean isToast = false;
 
+    /**
+     * 下载Apk时的回调
+     */
     public interface DownloadApkListener extends DownloadResponseBody.DownloadProgressListener {
         void onStart();
 
@@ -46,9 +49,22 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
         void onError(Throwable throwable);
     }
 
+    /**
+     * 版本更新工具类回调
+     */
     public interface VersionHelperListener {
+        /**
+         * 下载服务绑定状态改变回调
+         *
+         * @param state onServiceConnected=1，onServiceDisconnected=0
+         */
         void sConnectState(int state);
 
+        /**
+         * 版本更新工具各种状态回调
+         *
+         * @param result @see {@link UpdateResult}
+         */
         void vHelperCallBack(UpdateResult result);
     }
 
@@ -82,7 +98,7 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
         }
     }
 
-    void vCallBack(UpdateResult result) {
+    private void vCallBack(UpdateResult result) {
         if (mHelperCallBack != null) {
             mHelperCallBack.vHelperCallBack(result);
         }
@@ -121,7 +137,7 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
         if (mVersionModel == null) return;
         if (!mVersionModel.isNeedUpgrade()) {
             if (isToast) {
-                Toast.makeText(mContext, R.string.no_new_version, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.updater_no_new_version, Toast.LENGTH_SHORT).show();
             }
             clear(VersionUpdateHelper.this, UpdateResult.Success);
 //            unbindService();
@@ -142,7 +158,7 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
         this.mVersionModel = versionModel;
     }
 
-    public VersionUpdateHelper(@NonNull Activity context, @NonNull VersionHelperListener callback) {
+    private VersionUpdateHelper(@NonNull Activity context, @NonNull VersionHelperListener callback) {
         this.mContext = context;
         this.mHelperCallBack = callback;
     }
@@ -201,9 +217,9 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
 
     private void showNotWifiDownloadDialog() {
         AlertDialog.Builder builer = new AlertDialog.Builder(mContext);
-        builer.setTitle(R.string.found_new_version);
-        builer.setMessage(R.string.unwifi_tips);
-        builer.setNegativeButton(R.string.download_later, new DialogInterface.OnClickListener() {
+        builer.setTitle(R.string.updater_found_new_version);
+        builer.setMessage(R.string.updater_unwifi_tips);
+        builer.setNegativeButton(R.string.updater_download_later, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //exit app
@@ -211,7 +227,7 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
                 clear(VersionUpdateHelper.this, UpdateResult.Cancel);
             }
         });
-        builer.setPositiveButton(R.string.continue_download, new DialogInterface.OnClickListener() {
+        builer.setPositiveButton(R.string.updater_continue_download, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -232,15 +248,15 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
 
     private AlertDialog getUpgradeAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle(R.string.version_upgrade);
+        builder.setTitle(R.string.updater_version_upgrade);
         builder.setMessage(mVersionModel.getUpdateInfo());
         //当点确定按钮时从服务器上下载新的apk 然后安装
-        builder.setPositiveButton(R.string.update_now, (dialog, which) -> {
+        builder.setPositiveButton(R.string.updater_update_now, (dialog, which) -> {
             dialog.cancel();
             updateNow();
         });
         if (!mVersionModel.isForceUpdate()) {
-            builder.setNegativeButton(R.string.dont_update, (dialog, which) -> {
+            builder.setNegativeButton(R.string.updater_dont_update, (dialog, which) -> {
                 dialog.cancel();
                 clear(VersionUpdateHelper.this, UpdateResult.Cancel);
 //                unbindService();
@@ -344,7 +360,7 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
             isInitialization = false;
         }
 
-        if (mContext != null && mVersionModel != null && mVersionModel.isForceUpdate()) {
+        if (mVersionModel != null && mVersionModel.isNeedUpgrade() && mVersionModel.isForceUpdate()) {
             android.os.Process.killProcess(android.os.Process.myPid());
 //            LocalBroadcastManager.getInstance(mContext).sendBroadcast(new Intent(FORCE_EXIT_APP_ACTION));
         }

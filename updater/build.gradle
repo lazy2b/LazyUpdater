@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
-apply from: '../gradle-mvn-push.gradle'
+//apply from: '../gradle-mvn-push.gradle'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
 
 android {
     compileSdkVersion 27
@@ -8,16 +10,19 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 1
-        versionName "0.0.1"
+        versionCode 2
+        versionName "0.0.2"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            // zipAlign优化
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    resourcePrefix 'updater_'
     compileOptions {
         targetCompatibility 1.8
         sourceCompatibility 1.8
@@ -25,7 +30,65 @@ android {
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:support-v4:27.1.1"
     implementation "com.android.support:appcompat-v7:27.1.1"
     implementation "com.squareup.okhttp3:okhttp:3.10.0"
 }
+////Copy类型
+//task makeJar(type: Copy) {
+//    //删除存在的
+//    delete 'build/libs/mysdk.jar'
+//    //设置拷贝的文件
+//    from('build/intermediates/bundles/release/')
+//    //打进jar包后的文件目录
+//    into('build/libs/')
+//    //将classes.jar放入build/libs/目录下
+//    //include ,exclude参数来设置过滤
+//    //（我们只关心classes.jar这个文件）
+//    include('classes.jar')
+//    //重命名
+//    rename ('classes.jar', 'mysdk.jar')
+//}
+//
+//makeJar.dependsOn(build)
+//定义包名和版本号
+group = 'com.lazylibs'// library库包名
+version = '0.0.3' /* 版本号 */
+task generateSourcesJar(type: Jar) {//定义生成jar包任务，配置代码来源目录
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+task generateJavadocs(type: Javadoc) {//定义生成JavaDocs任务
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath()
+            .join(File.pathSeparator)) //使用android.getBootClasspath关联Android SDK类文件
+}
+task generateJavadocsJar(type: Jar) {//打包生成的JavaDocs为Jar
+    from generateJavadocs.destinationDir
+    classifier 'javadoc'
+}
+generateJavadocsJar.dependsOn generateJavadocs//保证生成JavaDocsJar在生成JavaDocs之后执行
+artifacts {//配置要上传到软件仓库的代码排泄物
+    archives generateJavadocsJar
+    archives generateSourcesJar
+}
+bintray {//软件仓库所需配置信息
+    user = 'lazy2b' //bintray.com中账户名
+    key = 'e240d4573381134a1b12cdfba38b3d8cbe91ac90' //bintray.com中与账户对应的API key
+    pkg {//包信息
+        repo = 'maven' //必须设定一个值，这里选择maven
+        name = 'updater' //必须，包名
+        version {
+            name = '0.0.3' //版本名称
+            desc = '修复强制更新判断逻辑问题[BUG:无新版，但线上版本为强制更新时会杀死应用]' //版本描述
+            //released  =new Date() //上传过程中如果此处报错，可以注释掉此句
+            vcsTag = '0.0.3' //版本
+        }
+        licenses = ['Apache-2.0'] //开源协议
+        vcsUrl = 'https://github.com/lazy2b/LazyUpdater' //指定项目源码地址[git]
+        websiteUrl = 'http://www.lazy2b.com' //项目官网地址
+    }
+    configurations = ['archives'] //必须为archives
+}
+tasks.getByPath(":updater:generateJavadocs").enabled = false

@@ -25,11 +25,11 @@ android {
 }
 
 dependencies {
-
+    //    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.alibaba:fastjson:1.1.68.android'
-
-    implementation project(':updater')
+    //        implementation project(':updater')
+    implementation 'com.lazylibs:updater:0.0.2'
 }

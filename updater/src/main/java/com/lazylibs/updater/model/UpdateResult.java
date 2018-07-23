@@ -5,8 +5,20 @@ package com.lazylibs.updater.model;
  */
 
 public enum UpdateResult {
+//    /**
+//     * 版本更下载成功
+//     */
     Success,
+//    /**
+//     * 出现异常
+//     */
     Error,
+//    /**
+//     * 取消下载
+//     */
     Cancel,
+//    /**
+//     * 销毁
+//     */
     Destroy
 }

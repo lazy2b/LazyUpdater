@@ -63,13 +63,13 @@ public class DownloadResponseBody extends ResponseBody {
         };
     }
 
-    /**
-     * 成功回调处理
-     */
+//    /**
+//     * 下载进度回调处理
+//     */
     public interface DownloadProgressListener {
-        /**
-         * 下载进度
-         */
+//        /**
+//         * 下载进度
+//         */
         @MainThread
         void updateProgress(@Nullable DownloadProgress progress);
     }

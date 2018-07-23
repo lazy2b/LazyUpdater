@@ -51,14 +51,14 @@ public class VersionUpdateService extends Service {
             mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         }
         // In this sample, we'll use the same text for the ticker and the expanded notification
-        CharSequence text = getString(R.string.downloading);
+        CharSequence text = getString(R.string.updater_downloading);
         // The PendingIntent to launch our activity if the user selects this notification
 //        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 //                new Intent(this, MainActivity.class), 0);
         if (Build.VERSION.SDK_INT >= 26) {
             //ChannelId为"1",ChannelName为"Channel1"
             NotificationChannel channel = new NotificationChannel("1",
-                    getString(R.string.download), NotificationManager.IMPORTANCE_DEFAULT);
+                    getString(R.string.updater_download), NotificationManager.IMPORTANCE_DEFAULT);
             channel.enableVibration(false);
             channel.enableLights(false);
 //            channel.setSound();
@@ -77,7 +77,7 @@ public class VersionUpdateService extends Service {
         mNotificationBuilder.setWhen(System.currentTimeMillis());  // the time stamp
         mNotificationBuilder.setContentText(text);  // the contents of the entry
 //        mNotificationBuilder.setContentIntent(contentIntent);  // The intent to send when the entry is clicked
-        mNotificationBuilder.setContentTitle(getString(R.string.download_progress, 0) + "%"); // the label of the entry
+        mNotificationBuilder.setContentTitle(getString(R.string.updater_download_progress, 0) + "%"); // the label of the entry
         mNotificationBuilder.setProgress(100, 0, false);
         mNotificationBuilder.setOngoing(true);
         mNotificationBuilder.setAutoCancel(true);
@@ -87,7 +87,7 @@ public class VersionUpdateService extends Service {
 
     void updateNotification(int progress) {
         if (mNotificationBuilder != null) {
-            mNotificationBuilder.setContentTitle(getString(R.string.download_progress, progress) + "%"); // the label of the entry
+            mNotificationBuilder.setContentTitle(getString(R.string.updater_download_progress, progress) + "%"); // the label of the entry
             mNotificationBuilder.setProgress(100, progress, false);
             mNotificationBuilder.setVibrate(null);
             mNotificationBuilder.setSound(null);
@@ -151,12 +151,12 @@ public class VersionUpdateService extends Service {
             protected void onPostExecute(File apk) {
                 if (apk != null) {
                     listener.onSuccess(apk);
-                    VersionUpdateUtils.showToast(getApplicationContext(), getString(R.string.download_success));
+                    VersionUpdateUtils.showToast(getApplicationContext(), getString(R.string.updater_download_success));
                     mDownLoading = false;
                     cancelNotification();
                 } else {
-                    listener.onError(throwable == null ? new Throwable(getString(R.string.download_file_is_empty)) : throwable);
-                    VersionUpdateUtils.showToast(getApplicationContext(), getString(R.string.download_fail));
+                    listener.onError(throwable == null ? new Throwable(getString(R.string.updater_download_file_is_empty)) : throwable);
+                    VersionUpdateUtils.showToast(getApplicationContext(), getString(R.string.updater_download_fail));
                     mDownLoading = false;
                     cancelNotification();
                 }
@@ -219,8 +219,8 @@ public class VersionUpdateService extends Service {
         return new VersionUpdateBinder();
     }
 
-    public class VersionUpdateBinder extends Binder {
-        public VersionUpdateService getService() {
+    class VersionUpdateBinder extends Binder {
+        VersionUpdateService getService() {
             return VersionUpdateService.this;
         }
     }
