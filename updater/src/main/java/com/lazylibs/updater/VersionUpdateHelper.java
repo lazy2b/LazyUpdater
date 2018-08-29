@@ -171,7 +171,7 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
         return (mUpdateService != null && mUpdateService.isDownloading());// || mDownloadProgressDialogFragment != null && (mDownloadProgressDialogFragment.isVisible());
     }
 
-    private void doDownloadApkSuccess(@NonNull File apk) {
+    private void doDownloadApkSuccess(@NonNull final File apk) {
         if (!TextUtils.isEmpty(apk.getAbsolutePath())) {
             VersionUpdateUtils.chmod(apk.getAbsolutePath());
             new Timer()
@@ -251,16 +251,26 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
         builder.setTitle(R.string.updater_version_upgrade);
         builder.setMessage(mVersionModel.getUpdateInfo());
         //当点确定按钮时从服务器上下载新的apk 然后安装
-        builder.setPositiveButton(R.string.updater_update_now, (dialog, which) -> {
-            dialog.cancel();
-            updateNow();
-        });
+        builder.setPositiveButton(R.string.updater_update_now,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        updateNow();
+                    }
+                }
+        );
         if (!mVersionModel.isForceUpdate()) {
-            builder.setNegativeButton(R.string.updater_dont_update, (dialog, which) -> {
-                dialog.cancel();
-                clear(VersionUpdateHelper.this, UpdateResult.Cancel);
-//                unbindService();
-            });
+            builder.setNegativeButton(R.string.updater_dont_update,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            dialog.cancel();
+                            clear(VersionUpdateHelper.this, UpdateResult.Cancel);
+                        }
+                    }
+            );
         }
         builder.setCancelable(false);
         return builder.create();

@@ -1,8 +1,10 @@
 package com.lazy2b.demo;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -37,26 +39,46 @@ public class UpdateActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
-                runOnUiThread(() -> {
-                    tips(getString(R.string.get_info_fail));
-                    VersionUpdateHelper.destroy(vHelper);
-                });
+                runOnUiThread(
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                tips(getString(R.string.get_info_fail));
+                                VersionUpdateHelper.destroy(vHelper);
+                            }
+                        }
+                );
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if ((vModel = parseBody(response.body())) == null) {
-                    runOnUiThread(() -> {
-                        tips(getString(R.string.get_info_fail));
-                        VersionUpdateHelper.destroy(vHelper);
-                    });
+                    runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    tips(getString(R.string.get_info_fail));
+                                    VersionUpdateHelper.destroy(vHelper);
+                                }
+                            }
+                    );
                 } else {
-                    runOnUiThread(() -> {
-                        // TODO Direction 1
-                        vHelper = VersionUpdateHelper.create(UpdateActivity.this,
-                                new SimpleVersionHelperListener(), vModel);
-                        tv_check.setOnClickListener(v -> onSuccess());
-                    });
+                    runOnUiThread(
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    // TODO Direction 1
+                                    vHelper = VersionUpdateHelper.create(UpdateActivity.this,
+                                            new SimpleVersionHelperListener(), vModel);
+                                    tv_check.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            onSuccess();
+                                        }
+                                    });
+                                }
+                            }
+                    );
                 }
             }
         });
@@ -92,16 +114,23 @@ public class UpdateActivity extends AppCompatActivity {
                 VersionUpdateHelper.destroy(vHelper);
             }
             // TODO Direction 2
-            tv_check.postDelayed(() -> vHelper = VersionUpdateHelper.create(UpdateActivity.this, new SimpleVersionHelperListener() {
-                @Override
-                public void sConnectState(int state) {
-                    if (state == 1) {
-                        vHelper.doHasVersionModel(vModel);
-                    } else {
-                        vHelper = null;
+            tv_check.postDelayed(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            vHelper = VersionUpdateHelper.create(UpdateActivity.this, new SimpleVersionHelperListener() {
+                                @Override
+                                public void sConnectState(int state) {
+                                    if (state == 1) {
+                                        vHelper.doHasVersionModel(vModel);
+                                    } else {
+                                        vHelper = null;
+                                    }
+                                }
+                            });
+                        }
                     }
-                }
-            }), vHelper == null ? 0 : 100);
+                    , vHelper == null ? 0 : 100);
         }
     }
 
@@ -122,8 +151,11 @@ public class UpdateActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(UpdateActivity.this);
         builder.setTitle(R.string.tips);
         builder.setMessage(msg);
-        builder.setPositiveButton(R.string.ok, (dialog, which) -> {
-            dialog.cancel();
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
         });
         builder.show();
     }

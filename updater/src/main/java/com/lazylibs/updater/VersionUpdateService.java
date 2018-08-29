@@ -12,8 +12,10 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.lazylibs.updater.model.DownloadProgress;
 import com.lazylibs.updater.model.DownloadResponseBody;
 import com.lazylibs.updater.utils.VersionUpdateUtils;
 
@@ -101,7 +103,7 @@ public class VersionUpdateService extends Service {
 
     @SuppressLint("StaticFieldLeak")
     @MainThread
-    public void downloadApk(String url, String apk, @NonNull VersionUpdateHelper.DownloadApkListener listener) {
+    public void downloadApk(String url, String apk, @NonNull final VersionUpdateHelper.DownloadApkListener listener) {
         if (TextUtils.isEmpty(url)) return;
         buildNotification();
         startForeground(NOTIFICATION_ID, mNotificationBuilder.getNotification());
@@ -120,22 +122,29 @@ public class VersionUpdateService extends Service {
             protected File doInBackground(String... args) {
                 try {
                     // 过滤器，做下载进度
-                    Interceptor interceptor = chain -> {
-                        Response originalResponse = chain.proceed(chain.request());
-                        return originalResponse.newBuilder()
-                                .body(
-                                        new DownloadResponseBody(
-                                                originalResponse.body(),
-                                                progress -> {
-                                                    if (progress == null)
-                                                        return;
-                                                    listener.updateProgress(progress);
-                                                    updateNotification(progress.getProgress());
-                                                }
-                                        )
-                                )
-                                .build();
-                    };
+                    Interceptor interceptor =
+                            new Interceptor() {
+                                @Override
+                                public Response intercept(Chain chain) throws IOException {
+                                    Response originalResponse = chain.proceed(chain.request());
+                                    return originalResponse.newBuilder()
+                                            .body(
+                                                    new DownloadResponseBody(
+                                                            originalResponse.body(),
+                                                            new DownloadResponseBody.DownloadProgressListener() {
+                                                                @Override
+                                                                public void updateProgress(@Nullable DownloadProgress progress) {
+                                                                    if (progress == null)
+                                                                        return;
+                                                                    listener.updateProgress(progress);
+                                                                    updateNotification(progress.getProgress());
+                                                                }
+                                                            }
+                                                    )
+                                            )
+                                            .build();
+                                }
+                            };
                     OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(interceptor).build();
                     Request request = new Request.Builder().url(args[0]).get().build();
                     Response response = httpClient.newCall(request).execute();
