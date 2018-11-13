@@ -14,4 +14,5 @@
     <string name="updater_update_now">立即更新</string>
     <string name="updater_version_upgrade">版本升级</string>
     <string name="updater_no_new_version">暂无新版本</string>
+    <string name="updater_no_url">无下载地址</string>
 </resources>

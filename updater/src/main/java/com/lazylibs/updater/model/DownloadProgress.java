@@ -23,7 +23,11 @@ public class DownloadProgress {
         int currProgress = 0;
 
         ProgressBuilder(long len) {
-            step = len / 100L;
+            if (len == 0) {
+                step = 1;
+            } else {
+                step = len / 100L;
+            }
         }
 
         DownloadProgress get(long bytesRead) {

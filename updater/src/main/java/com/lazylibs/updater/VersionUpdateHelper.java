@@ -143,6 +143,16 @@ public class VersionUpdateHelper implements ServiceConnection {//}, IUpgradeMode
 //            unbindService();
             return;
         }
+
+        if(TextUtils.isEmpty(mVersionModel.getDownloadUrl())){
+            if (isToast) {
+                Toast.makeText(mContext, R.string.updater_no_new_version, Toast.LENGTH_SHORT).show();
+            }
+            clear(VersionUpdateHelper.this, UpdateResult.Success);
+//            unbindService();
+            return;
+        }
+
         if (mContext == null) return;
         mNewVersionDialog = getUpgradeAlertDialog();
         mNewVersionDialog.show();

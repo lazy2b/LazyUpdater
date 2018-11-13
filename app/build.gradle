@@ -1,13 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
-
+    buildToolsVersion config.buildToolsVersion
+    compileSdkVersion config.compileSdkVersion
     defaultConfig {
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVerion
         applicationId "com.lazy2b.demo.update"
-        minSdkVersion 14
-        targetSdkVersion 27
         versionCode 1
         versionName "0.0.1"
         multiDexEnabled true
@@ -18,18 +17,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
-    }
+    compileOptions config.compileOptions
 }
 
 dependencies {
     //    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.alibaba:fastjson:1.1.68.android'
-    //        implementation project(':updater')
-    implementation 'com.lazylibs:updater:0.0.2'
+    implementation deps.support.v4
+    implementation deps.support.appcompat
+    implementation deps.okhttp.runtime
+    implementation deps.fastjson
+//    implementation 'com.android.support:support-v4:28.0.0'
+//    implementation 'com.android.support:appcompat-v7:28.0.0'
+//    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+//    implementation 'com.alibaba:fastjson:1.1.68.android'
+//    implementation 'com.caimao:lrc.netdiagnosis:1.0.0-20181109.025032-3'
+//    implementation 'com.lazylibs:updater:0.0.3'
+//    implementation 'com.lazylibs:updater:0.0.2'
 }
