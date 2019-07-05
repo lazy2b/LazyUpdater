@@ -1,9 +1,9 @@
 apply plugin: 'com.android.library'
 //apply from: '../gradle-mvn-push.gradle'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
+ apply plugin: 'com.jfrog.bintray'
+ apply plugin: 'com.github.dcendents.android-maven'
 
-def verName = "0.0.4"
+def verName = '0.0.4'
 def verCode = 4
 
 android {
@@ -51,8 +51,6 @@ dependencies {
 //
 //makeJar.dependsOn(build)
 //定义包名和版本号
-//group = 'com.lazylibs'// library库包名
-//version = '0.0.3' /* 版本号 */
 task generateSourcesJar(type: Jar) {//定义生成jar包任务，配置代码来源目录
     from android.sourceSets.main.java.srcDirs
     classifier 'sources'
@@ -71,6 +69,8 @@ artifacts {//配置要上传到软件仓库的代码排泄物
     archives generateJavadocsJar
     archives generateSourcesJar
 }
+group = 'com.lazylibs'// library库包名
+version = verName /* 版本号 */
 bintray {//软件仓库所需配置信息
     user = 'lazy2b' //bintray.com中账户名
     key = 'e240d4573381134a1b12cdfba38b3d8cbe91ac90' //bintray.com中与账户对应的API key

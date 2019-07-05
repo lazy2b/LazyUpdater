@@ -17,11 +17,4 @@ public interface IUpgradeModel {
     String getNewVersionName();
 
     String getDownloadUrl();
-
-//    interface IUpgradeModelListener {
-//        void onSuccess(IUpgradeModel iUpgradeModel);
-//
-//        void onError(Throwable throwable);
-//    }
-
 }

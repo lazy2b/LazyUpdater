@@ -26,6 +26,7 @@ dependencies {
     implementation deps.support.appcompat
     implementation deps.okhttp.runtime
     implementation deps.fastjson
+    implementation project(':updater')
 //    implementation 'com.android.support:support-v4:28.0.0'
 //    implementation 'com.android.support:appcompat-v7:28.0.0'
 //    implementation 'com.squareup.okhttp3:okhttp:3.10.0'

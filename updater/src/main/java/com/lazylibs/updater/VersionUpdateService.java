@@ -12,10 +12,8 @@ import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.lazylibs.updater.model.DownloadProgress;
 import com.lazylibs.updater.model.DownloadResponseBody;
 import com.lazylibs.updater.utils.VersionUpdateUtils;
 
@@ -131,14 +129,11 @@ public class VersionUpdateService extends Service {
                                             .body(
                                                     new DownloadResponseBody(
                                                             originalResponse.body(),
-                                                            new DownloadResponseBody.DownloadProgressListener() {
-                                                                @Override
-                                                                public void updateProgress(@Nullable DownloadProgress progress) {
-                                                                    if (progress == null)
-                                                                        return;
-                                                                    listener.updateProgress(progress);
-                                                                    updateNotification(progress.getProgress());
-                                                                }
+                                                            progress -> {
+                                                                if (progress == null)
+                                                                    return;
+                                                                listener.updateProgress(progress);
+                                                                updateNotification(progress.getProgress());
                                                             }
                                                     )
                                             )
@@ -171,56 +166,6 @@ public class VersionUpdateService extends Service {
                 }
             }
         }.execute(url, apk);
-
-
-//        VersionUpdateUtils.newDefaultRetrofitBuilderByNoConverter()
-//                .client(new OkHttpClient.Builder()
-//                        .addInterceptor(chain -> {
-//                            Response originalResponse = chain.proceed(chain.request());
-//                            return originalResponse.newBuilder()
-//                                    .body(new DownloadResponseBody(originalResponse.body(), progress -> {
-//                                        if (progress == null) return;
-//                                        if (listener != null) {
-//                                            listener.updateProgress(progress);
-//                                        }
-//                                        updateNotification(progress.getProgress());
-//                                    })).build();
-//                        })
-//                        .build()
-//                )
-//                .baseUrl("https://www.baidu.com")
-//                .build()
-//                .create(DownloadApkApi.class)
-//                .downloadFileWithDynamicUrlSync(url)
-//                .singleOrError()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(Schedulers.io())
-//                .map(responseBody -> VersionUpdateUtils.writeResponseBodyToDisk(apk, responseBody))
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeWith(new DisposableSingleObserver<File>() {
-//                    @Override
-//                    protected void onStart() {
-//                        listener.onStart();
-//                        mDownLoading = true;
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(File file) {
-//                        VersionUpdateUtils.showToast(getApplicationContext(), "下载成功！");
-//                        listener.onSuccess(file);
-//                        mDownLoading = false;
-//                        cancelNotification();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable throwable) {
-//                        throwable.printStackTrace();
-//                        VersionUpdateUtils.showToast(getApplicationContext(), "下载失败！");
-//                        listener.onError(throwable);
-//                        mDownLoading = false;
-//                        cancelNotification();
-//                    }
-//                });
     }
 
     @Override

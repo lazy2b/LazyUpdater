@@ -180,29 +180,17 @@ public class VersionUpdateUtils {
     public static void installApp(Context context, File file, String authority) {
         if (file == null || !file.exists() || !file.isFile()) return;
         Intent intent = new Intent(Intent.ACTION_VIEW);
-        Uri data;
-        String type = "application/vnd.android.package-archive";
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Uri apkUri;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            data = Uri.fromFile(file);
+            apkUri = Uri.fromFile(file);
         } else {
-            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            data = FileProvider.getUriForFile(context, authority, file);
+            apkUri = FileProvider.getUriForFile(context, authority, file);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
-        intent.setDataAndType(data, type);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
         context.startActivity(intent);
     }
-
-//    /**
-//     * 获取新的{@link Retrofit.Builder}
-//     *
-//     * @return Retrofit.Builder
-//     */
-//    public static Retrofit.Builder newDefaultRetrofitBuilderByNoConverter() {
-//        return new Retrofit.Builder()
-////                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-//                .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
-//    }
 
     public static String apkDir(@NonNull Context context) {
         return context.getCacheDir().getAbsolutePath() + "/";//apkDir + "/apk/";
