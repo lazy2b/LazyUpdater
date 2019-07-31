@@ -238,18 +238,26 @@ public class VersionUpdateHelper implements ServiceConnection {
         builder.setTitle(R.string.updater_version_upgrade);
         builder.setMessage(mVersionModel.getUpdateInfo());
         //当点确定按钮时从服务器上下载新的apk 然后安装
-        builder.setPositiveButton(R.string.updater_update_now,
-                (dialog, which) -> {
-                    dialog.cancel();
-                    downloadWay = DownloadWay.defaultWay;
-                    updateNow();
-                }
-        );
         if (mHelperCallBack != null && mHelperCallBack.isAnotherWay()) {
-            builder.setNegativeButton(R.string.updater_another_way,
+            builder.setPositiveButton(R.string.updater_another_way,
                     (dialog, which) -> {
                         dialog.cancel();
                         downloadWay = DownloadWay.anotherWay;
+                        updateNow();
+                    }
+            );
+            builder.setNegativeButton(R.string.updater_update_now,
+                    (dialog, which) -> {
+                        dialog.cancel();
+                        downloadWay = DownloadWay.defaultWay;
+                        updateNow();
+                    }
+            );
+        } else {
+            builder.setPositiveButton(R.string.updater_update_now,
+                    (dialog, which) -> {
+                        dialog.cancel();
+                        downloadWay = DownloadWay.defaultWay;
                         updateNow();
                     }
             );
@@ -272,7 +280,7 @@ public class VersionUpdateHelper implements ServiceConnection {
             if (mHelperCallBack != null) {
                 mHelperCallBack.anotherWay(mContext, mVersionModel);
                 if (mVersionModel.isForceUpdate()) {
-                    mHandler.postDelayed(() -> clear(this, UpdateResult.Success), 10);
+                    postDelayed(() -> clear(this, UpdateResult.Success), 10);
                 }
             }
         } else {
