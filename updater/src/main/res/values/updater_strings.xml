@@ -16,4 +16,5 @@
     <string name="updater_version_upgrade">Upgrade</string>
     <string name="updater_no_new_version">No Upgrade</string>
     <string name="updater_no_url">No Url</string>
+    <string name="updater_no_browser">No Browser!</string>
 </resources>

@@ -76,12 +76,17 @@ public class VersionUpdateHelper implements ServiceConnection {
          */
         default boolean anotherWay(Context context, IUpgradeModel upgrade) {
             if (context == null || TextUtils.isEmpty(upgrade.getDownloadUrl())) return true;
-            context.startActivity(
-                    new Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(upgrade.getDownloadUrl())
-                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            );
+            try {
+                context.startActivity(
+                        new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(upgrade.getDownloadUrl())
+                        ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                );
+            } catch (Exception e) {
+                Toast.makeText(context, R.string.updater_no_browser, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
             return true;
         }
     }

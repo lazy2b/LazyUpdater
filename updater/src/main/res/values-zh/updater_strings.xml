@@ -16,4 +16,5 @@
     <string name="updater_version_upgrade">版本升级</string>
     <string name="updater_no_new_version">暂无新版本</string>
     <string name="updater_no_url">无下载地址</string>
+    <string name="updater_no_browser">本机尚未安装手机浏览器！</string>
 </resources>
