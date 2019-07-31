@@ -11,6 +11,7 @@
     <string name="updater_download_later">Later</string>
     <string name="updater_unwifi_tips">Check that your network is in a non-wifi state, download the new version will consume a certain amount of traffic, do you continue to download?</string>
     <string name="updater_dont_update">Cancel</string>
+    <string name="updater_another_way">Another Way</string>
     <string name="updater_update_now">Update Now</string>
     <string name="updater_version_upgrade">Upgrade</string>
     <string name="updater_no_new_version">No Upgrade</string>

@@ -4,8 +4,9 @@ apply plugin: 'com.android.library'
  apply plugin: 'com.github.dcendents.android-maven'
 
 // ->v0.0.5&c5->20190705
-def verName = '0.0.5'
-def verCode = 5
+// ->v0.0.6&c6->20190731
+def verName = '0.0.6'
+def verCode = 6
 
 android {
     buildToolsVersion config.buildToolsVersion

@@ -70,7 +70,12 @@ public class UpdateActivity extends AppCompatActivity {
                                 public void run() {
                                     // TODO Direction 1
                                     vHelper = VersionUpdateHelper.create(UpdateActivity.this,
-                                            new SimpleVersionHelperListener(), vModel);
+                                            new SimpleVersionHelperListener() {
+                                                @Override
+                                                public boolean isAnotherWay() {
+                                                    return true;
+                                                }
+                                            }, vModel);
                                     tv_check.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {

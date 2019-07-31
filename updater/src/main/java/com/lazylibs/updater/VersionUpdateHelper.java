@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -63,6 +64,20 @@ public class VersionUpdateHelper implements ServiceConnection {
          * @param result @see {@link UpdateResult}
          */
         void vHelperCallBack(UpdateResult result);
+
+        default boolean isAnotherWay() {
+            return false;
+        }
+
+        default void anotherWay(Context context, IUpgradeModel upgrade) {
+            if (context == null || TextUtils.isEmpty(upgrade.getDownloadUrl())) return;
+            context.startActivity(
+                    new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(upgrade.getDownloadUrl())
+                    ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            );
+        }
     }
 
     public static VersionUpdateHelper create(@NonNull Activity context, @NonNull VersionHelperListener callback, IUpgradeModel versionModel) {
@@ -209,6 +224,15 @@ public class VersionUpdateHelper implements ServiceConnection {
         }
     }
 
+    @interface DownloadWay {
+        int cancel = 0;
+        int defaultWay = 1;
+        int anotherWay = 2;
+    }
+
+    @DownloadWay
+    private int downloadWay = DownloadWay.defaultWay;
+
     private AlertDialog getUpgradeAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.updater_version_upgrade);
@@ -217,14 +241,24 @@ public class VersionUpdateHelper implements ServiceConnection {
         builder.setPositiveButton(R.string.updater_update_now,
                 (dialog, which) -> {
                     dialog.cancel();
+                    downloadWay = DownloadWay.defaultWay;
                     updateNow();
                 }
         );
-        if (!mVersionModel.isForceUpdate()) {
-            builder.setNegativeButton(R.string.updater_dont_update,
+        if (mHelperCallBack != null && mHelperCallBack.isAnotherWay()) {
+            builder.setNegativeButton(R.string.updater_another_way,
                     (dialog, which) -> {
-
                         dialog.cancel();
+                        downloadWay = DownloadWay.anotherWay;
+                        updateNow();
+                    }
+            );
+        }
+        if (!mVersionModel.isForceUpdate()) {
+            builder.setNeutralButton(R.string.updater_dont_update,
+                    (dialog, which) -> {
+                        dialog.cancel();
+                        downloadWay = DownloadWay.cancel;
                         clear(VersionUpdateHelper.this, UpdateResult.Cancel);
                     }
             );
@@ -234,49 +268,58 @@ public class VersionUpdateHelper implements ServiceConnection {
     }
 
     private void doDownLoadTask() {
-        String apkDir = VersionUpdateUtils.apkDir(mContext);
-        String apkName = apkDir + VersionUpdateUtils.apkFile(mVersionModel.getNewVersionName());
-        File apkFile = new File(apkName);
-        if (VersionUpdateUtils.checkAPKIsExists(mContext, apkName)) {
-            doDownloadApkSuccess(apkFile);
+        if (downloadWay == DownloadWay.anotherWay) {
+            if (mHelperCallBack != null) {
+                mHelperCallBack.anotherWay(mContext, mVersionModel);
+                if (mVersionModel.isForceUpdate()) {
+                    mHandler.postDelayed(() -> clear(this, UpdateResult.Success), 10);
+                }
+            }
         } else {
-            VersionUpdateUtils.cleanApk(apkDir);
-            mUpdateService.downloadApk(
-                    mVersionModel.getDownloadUrl(),
-                    apkName,
-                    new DownloadApkListener() {
-                        @Override
-                        public void onStart() {
-                            if (mContext != null && mContext instanceof FragmentActivity) {
-                                if (mDownloadProgressDialogFragment == null) {
-                                    mDownloadProgressDialogFragment = DownloadProgressDialogFragment.newInstance(mVersionModel.isForceUpdate());
+            String apkDir = VersionUpdateUtils.apkDir(mContext);
+            String apkName = apkDir + VersionUpdateUtils.apkFile(mVersionModel.getNewVersionName());
+            File apkFile = new File(apkName);
+            if (VersionUpdateUtils.checkAPKIsExists(mContext, apkName)) {
+                doDownloadApkSuccess(apkFile);
+            } else {
+                VersionUpdateUtils.cleanApk(apkDir);
+                mUpdateService.downloadApk(
+                        mVersionModel.getDownloadUrl(),
+                        apkName,
+                        new DownloadApkListener() {
+                            @Override
+                            public void onStart() {
+                                if (mContext != null && mContext instanceof FragmentActivity) {
+                                    if (mDownloadProgressDialogFragment == null) {
+                                        mDownloadProgressDialogFragment = DownloadProgressDialogFragment.newInstance(mVersionModel.isForceUpdate());
+                                    }
+                                    mDownloadProgressDialogFragment.show(((FragmentActivity) mContext).getSupportFragmentManager(), "loading");
                                 }
-                                mDownloadProgressDialogFragment.show(((FragmentActivity) mContext).getSupportFragmentManager(), "loading");
+                            }
+
+                            @Override
+                            public void onSuccess(File apk) {
+                                if (mDownloadProgressDialogFragment != null)
+                                    mDownloadProgressDialogFragment.dismissAllowingStateLoss();
+                                doDownloadApkSuccess(apk);
+                            }
+
+                            @Override
+                            public void onError(Throwable throwable) {
+                                if (mDownloadProgressDialogFragment != null)
+                                    mDownloadProgressDialogFragment.dismissAllowingStateLoss();
+                                clear(VersionUpdateHelper.this, UpdateResult.Error);
+                            }
+
+                            @Override
+                            public void updateProgress(DownloadProgress progress) {
+                                if (mDownloadProgressDialogFragment != null) {
+                                    mDownloadProgressDialogFragment.updateProgress(progress);
+                                }
                             }
                         }
-
-                        @Override
-                        public void onSuccess(File apk) {
-                            if (mDownloadProgressDialogFragment != null)
-                                mDownloadProgressDialogFragment.dismissAllowingStateLoss();
-                            doDownloadApkSuccess(apk);
-                        }
-
-                        @Override
-                        public void onError(Throwable throwable) {
-                            if (mDownloadProgressDialogFragment != null)
-                                mDownloadProgressDialogFragment.dismissAllowingStateLoss();
-                            clear(VersionUpdateHelper.this, UpdateResult.Error);
-                        }
-
-                        @Override
-                        public void updateProgress(DownloadProgress progress) {
-                            if (mDownloadProgressDialogFragment != null) {
-                                mDownloadProgressDialogFragment.updateProgress(progress);
-                            }
-                        }
-                    }
-            );
+                );
+            }
         }
     }
 

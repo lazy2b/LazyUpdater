@@ -11,6 +11,7 @@
     <string name="updater_download_later">以后再说</string>
     <string name="updater_unwifi_tips">检查到您的网络处于非wifi状态,下载新版本将消耗一定的流量,是否继续下载?</string>
     <string name="updater_dont_update">暂不更新</string>
+    <string name="updater_another_way">其他渠道</string>
     <string name="updater_update_now">立即更新</string>
     <string name="updater_version_upgrade">版本升级</string>
     <string name="updater_no_new_version">暂无新版本</string>
