@@ -69,14 +69,20 @@ public class VersionUpdateHelper implements ServiceConnection {
             return false;
         }
 
-        default void anotherWay(Context context, IUpgradeModel upgrade) {
-            if (context == null || TextUtils.isEmpty(upgrade.getDownloadUrl())) return;
+        /**
+         * @param context
+         * @param upgrade
+         * @return 是否需要自动关闭服务
+         */
+        default boolean anotherWay(Context context, IUpgradeModel upgrade) {
+            if (context == null || TextUtils.isEmpty(upgrade.getDownloadUrl())) return true;
             context.startActivity(
                     new Intent(
                             Intent.ACTION_VIEW,
                             Uri.parse(upgrade.getDownloadUrl())
                     ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             );
+            return true;
         }
     }
 
@@ -278,9 +284,8 @@ public class VersionUpdateHelper implements ServiceConnection {
     private void doDownLoadTask() {
         if (downloadWay == DownloadWay.anotherWay) {
             if (mHelperCallBack != null) {
-                mHelperCallBack.anotherWay(mContext, mVersionModel);
-                if (mVersionModel.isForceUpdate()) {
-                    postDelayed(() -> clear(this, UpdateResult.Success), 10);
+                if (mHelperCallBack.anotherWay(mContext, mVersionModel)) {
+                    postDelayed(() -> clear(this, UpdateResult.Success), 5);
                 }
             }
         } else {
