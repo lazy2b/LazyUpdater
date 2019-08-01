@@ -132,7 +132,7 @@ public class VersionUpdateHelper implements ServiceConnection {
         this.isToast = toast;
     }
 
-    public void doHasVersionModel(IUpgradeModel vModel) {
+    public void doHasVersionModel(IUpgradeModel vModel, @DownloadWay int... downloadWay) {
         if (vModel == null || isWaitForUpdate() || isWaitForDownload() || !isInitialization) {
             return;
         }
@@ -143,6 +143,9 @@ public class VersionUpdateHelper implements ServiceConnection {
             return;
         }
         if (mContext == null) return;
+        if (downloadWay != null && downloadWay.length > 0) {
+            this.downloadWay = downloadWay[0];
+        }
         updateNow();
     }
 
