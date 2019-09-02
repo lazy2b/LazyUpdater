@@ -10,12 +10,14 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
+
+import com.lazylibs.updater.interfaces.DownloadWay;
 import com.lazylibs.updater.interfaces.IUpgradeModel;
 import com.lazylibs.updater.model.DownloadProgress;
 import com.lazylibs.updater.model.DownloadResponseBody;
@@ -201,7 +203,7 @@ public class VersionUpdateHelper implements ServiceConnection {
         if (!TextUtils.isEmpty(apk.getAbsolutePath())) {
             VersionUpdateUtils.chmod(apk.getAbsolutePath());
             postDelayed(() -> {
-                VersionUpdateUtils.installApp(mContext.getApplicationContext(), apk, mContext.getPackageName() + ".provider");
+                VersionUpdateUtils.installApp(mContext.getApplicationContext(), apk, mContext.getPackageName() + ".update.provider");
                 postDelayed(() -> clear(VersionUpdateHelper.this, UpdateResult.Success), 10);
             }, 10);
         }
@@ -236,12 +238,6 @@ public class VersionUpdateHelper implements ServiceConnection {
         } else {
             showNotWifiDownloadDialog();
         }
-    }
-
-    @interface DownloadWay {
-        int cancel = 0;
-        int defaultWay = 1;
-        int anotherWay = 2;
     }
 
     @DownloadWay

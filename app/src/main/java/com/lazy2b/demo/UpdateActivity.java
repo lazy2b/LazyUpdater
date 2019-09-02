@@ -1,15 +1,14 @@
 package com.lazy2b.demo;
 
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.alibaba.fastjson.JSON;
-import com.lazylibs.updater.R;
 import com.lazylibs.updater.SimpleVersionHelperListener;
 import com.lazylibs.updater.VersionUpdateHelper;
 import com.lazylibs.updater.interfaces.IUpgradeModel;
@@ -152,7 +151,7 @@ public class UpdateActivity extends AppCompatActivity {
                                 @Override
                                 public void sConnectState(int state) {
                                     if (state == 1) {
-                                        vHelper.doHasVersionModel(vModel);
+                                        vHelper.doHasVersionModel(vModel, 2);
                                     } else {
                                         vHelper = null;
                                     }

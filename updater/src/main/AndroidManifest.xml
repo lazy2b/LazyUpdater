@@ -8,15 +8,15 @@
     <application>
         <!-- 定义FileProvider -->
         <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="${applicationId}.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.update.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/updater_file_provider" />
         </provider>
-        <service android:name=".VersionUpdateService" />
+        <service android:name="com.lazylibs.updater.VersionUpdateService" />
     </application>
 
 </manifest>

@@ -10,9 +10,10 @@ import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 
 import com.lazylibs.updater.model.DownloadResponseBody;
 import com.lazylibs.updater.utils.VersionUpdateUtils;
