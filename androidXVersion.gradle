@@ -1,0 +1,367 @@
+// versions
+def versions = [
+        // config
+        android_gradle_plugin      : '3.5.1',
+        // android components
+        lifecycle                  : "2.0.0",
+        room                       : "2.0.0",
+        paging                     : "2.0.0",
+        navigation                 : "1.0.0",
+        work                       : "2.2.0",
+        androidx                   : "1.0.0",
+        constraintlayout           : "1.1.3",
+        multidex                   : "2.0.0",
+        // caimao
+        lrc_netdiagnosis           : "1.0.1-20190802.020140-13",
+        // 凯旋线上版本-1.5.1-20190323.092332-5
+        // 1.5.1-20190523.125308-6 添加香港彩相关内容
+        // 1.5.1-***-7&1.5.1-20190605.075307-8
+        // 修改获取香港彩开奖结果接口为外部传入Url,以适应测试随时修改开奖数据来测试开奖状态的问题。
+        // 1.5.1-20190612.070544-9 香港彩开奖逻辑修改。
+        // 1.5.1-20190614.062155-11 香港彩开奖中js轮询时间在10s基础上加0-5s随机。
+        // 1.5.1-20191009.094450-15 部分异常重启应用后没有启动开奖服务的情况。
+        lrc_award                  : "1.5.1-20191009.094450-15",
+        lrc_widget                 : "1.0.0-20190313.041628-2",
+        lrc_widget_x5              : "1.0.0-20190830.024431-4",//1.0.0-20190730.014208-3去除调试信息。改为打印
+        lrc_banner                 : "1.0.0-20190322.070002-5",
+        lrc_x5_holder              : "1.0.0-20190830.091514-4",
+        // lazy_updater——0.0.[6|7|8|9|10] 针对凯旋直播加密后无法更新的问题发布的新版。添加其他下载方式接口
+        lazy_updater               : "1.0.0",
+        lrc                        : "2.0.5",
+        skeleton                   : "2.0.0",
+        // extra
+        okhttp                     : "3.11.0",
+        retrofit                   : "2.4.0",
+        rxandroid                  : "2.1.0",
+        rxjava                     : "2.2.2",
+        kotlin                     : "1.3.41",
+        gson                       : "2.8.5",
+        fastjson                   : "1.1.70.android",
+        logger                     : "2.1.1",
+        glide                      : "4.9.0",
+        glide_transformations      : "4.1.0",
+        gpuimage                   : "2.0.4",
+        // third-party
+        client_mqttv3              : "1.2.0",
+        android_service            : "1.1.1",
+        umeng_common               : "2.1.0",
+        umeng_analytics            : "8.1.2",
+        umeng_share                : "6.9.6",
+        umeng_share_qq             : "6.9.6",
+        umeng_debug                : "1.0.0",
+        umeng_utdid                : "1.1.5.3",
+        umeng_push                 : "6.0.1",
+        umeng_push_huawei_basetb   : "2.6.3.305",
+        umeng_push_huawei_pushtb   : "2.6.3.305",
+        umeng_push_huawei_umengaccs: "1.2.1",
+        umeng_push_oppo            : "1.0.1",
+        umeng_push_oppo_umengaccs  : "1.0.3",
+        umeng_push_vivo            : "2.3.1",
+        umeng_push_vivo_umengaccs  : "1.0.4",
+        umeng_push_xiaomi          : "3.6.17",
+        umeng_push_xiaomi_umengaccs: "1.1.0",
+        umeng_push_meizu           : "3.8.1",
+        umeng_push_meizu_umengaccs : "1.0.6",
+        tbs_sdk                    : "3.1.0",
+        xcl_charts                 : "2.3.0",
+        // util
+        kpswitch                   : "1.6.2",
+        easypermissions            : "3.0.0",
+        // view
+        smart_refresh              : "1.1.0",
+        photoView                  : "2.2.0",
+        multitype                  : "3.5.0",
+        material_dialog            : "1.3.1",
+        bga_banner                 : "2.2.4@aar",
+        daimajia_easing            : "2.0@aar",
+        daimajia_androidanimations : "2.3@aar",
+        bindingCollectionAdapter   : "2.2.0",
+        // test
+        leakcanary                 : "2.0-beta-3",
+        junit                      : "4.12",
+        runner                     : "1.2.0",
+        espresso_core              : "3.2.0",
+]
+
+def android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+
+// support
+def androidx = [
+        constraintlayout       : "androidx.constraintlayout:constraintlayout:$versions.constraintlayout",
+        constraintlayout_solver: "androidx.constraintlayout:constraintlayout-solver$versions.constraintlayout",
+        multidex               : "androidx.multidex:multidex:$versions.multidex",
+        appcompat              : "androidx.appcompat:appcompat:$versions.androidx",
+        material               : "com.google.android.material:material:$versions.androidx",
+        viewpager2             : "androidx.viewpager2:viewpager2:$versions.androidx" + "-beta03",
+        recyclerview           : "androidx.recyclerview:recyclerview:$versions.androidx",
+        recyclerview_selection : "androidx.recyclerview:recyclerview-selection:$versions.androidx",
+        percentlayout          : "androidx.percentlayout:percentlayout:$versions.androidx",
+        cardview               : "androidx.cardview:cardview:$versions.androidx",
+        palette                : "androidx.palette:palette:$versions.androidx",
+        annotation             : "androidx.annotation:annotation:$versions.androidx",
+        fragment               : "androidx.fragment:fragment:$versions.androidx",
+        exifinterface          : "androidx.exifinterface:exifinterface:$versions.androidx",
+        vectordrawable         : "androidx.vectordrawable:vectordrawable:$versions.androidx",
+        vectordrawable_animated: "androidx.vectordrawable:vectordrawable-animated:$versions.androidx",
+        dynamicanimation       : "androidx.dynamicanimation:dynamicanimation:$versions.androidx",
+        emoji                  : "androidx.emoji:emoji:$versions.androidx",
+        emoji_bundled          : "androidx.emoji:emoji-bundled:$versions.androidx",
+        emoji_appcompat        : "androidx.emoji:emoji-appcompat:$versions.androidx",
+        core                   : "androidx.core:core:$versions.androidx",
+        core_ui                : "androidx.legacy:legacy-support-core-ui:$versions.androidx",
+        core_utils             : "androidx.legacy:legacy-support-core-utils:$versions.androidx",
+        v4                     : "androidx.legacy:legacy-support-v4:$versions.androidx",
+        v13                    : "androidx.legacy:legacy-support-v13:$versions.androidx",
+]
+
+// Lifecycle
+def lifecycle = [
+        extensions         : "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle",
+        viewmodel          : "androidx.lifecycle:lifecycle-viewmodel:$versions.lifecycle",
+        viewmodel_ktx      : "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle",
+        livedata           : "androidx.lifecycle:lifecycle-livedata:$versions.lifecycle",
+        runtime            : "androidx.lifecycle:lifecycle-runtime:$versions.lifecycle",
+        common_java8       : "androidx.lifecycle:lifecycle-common-java8:$versions.lifecycle",
+        compiler           : "androidx.lifecycle:lifecycle-compiler:$versions.lifecycle",
+        reactivestreams    : "androidx.lifecycle:lifecycle-reactivestreams:$versions.lifecycle",
+        reactivestreams_ktx: "androidx.lifecycle:lifecycle-reactivestreams-ktx:$versions.lifecycle",
+        core_testing       : "androidx.arch.core:core-testing:$versions.lifecycle",
+]
+// Room
+def room = [
+        runtime : "androidx.room:room-runtime:$versions.room",
+        compiler: "androidx.room:room-compiler:$versions.room",
+        rxjava2 : "androidx.room:room-rxjava2:$versions.room",
+        guava   : "androidx.room:room-guava:$versions.room",
+        testing : "androidx.room:room-testing:$versions.room",
+]
+// Paging
+def paging = [
+        runtime    : "androidx.paging:paging-runtime:$versions.paging",
+        runtime_ktx: "androidx.paging:paging-runtime-ktx:$versions.paging",
+        rxjava2    : "androidx.paging:paging-rxjava2:$versions.paging",
+        rxjava2_ktx: "androidx.paging:paging-rxjava2-ktx:$versions.paging",
+        common     : "androidx.paging:paging-common:$versions.paging",
+        common_ktx : "androidx.paging:paging-common-ktx:$versions.paging",
+]
+// Navigation android
+def navigation = [
+        safe_args_gradle_plugin: "android.arch.navigation:navigation-safe-args-gradle-plugin:$versions.navigation",
+        fragment               : "android.arch.navigation:navigation-fragment:$versions.navigation",
+        fragment_ktx           : "android.arch.navigation:navigation-fragment-ktx:$versions.navigation",
+        ui                     : "android.arch.navigation:navigation-ui:$versions.navigation",
+        ui_ktx                 : "android.arch.navigation:navigation-ui-ktx:$versions.navigation",
+        testing                : "android.arch.navigation:navigation-testing:$versions.navigation",
+        testing_ktx            : "android.arch.navigation:navigation-testing-ktx:$versions.navigation",
+]
+//WorkManager android
+def work = [
+        runtime    : "android.arch.work:work-runtime:$versions.work",
+        runtime_ktx: "android.arch.work:work-runtime-ktx:$versions.work",
+        firebase   : "android.arch.work:work-firebase:$versions.work",
+        testing    : "android.arch.work:work-testing:$versions.work",
+]
+// caimao
+def lrc = [
+        log         : "com.caimao:lrc.log:$versions.lrc",
+        http        : "com.caimao:lrc.http:$versions.lrc",
+        util        : "com.caimao:lrc.util:$versions.lrc",
+        adapter     : "com.caimao:lrc.adapter:$versions.lrc",
+        component   : "com.caimao:lrc.component:$versions.lrc",
+        lifecycle   : "com.caimao:lrc.lifecycle:$versions.lrc",
+        netdiagnosis: "com.caimao:lrc.netdiagnosis:$versions.lrc_netdiagnosis",
+        award       : "com.caimao:lrc.award:$versions.lrc_award",
+//        widget      : "com.caimao:lrc.widget:
+        widget      : "com.caimao:lrc.widget:$versions.lrc_widget",
+        x5          : [
+                widget: "com.caimao:lrc.widget.x5:$versions.lrc_widget_x5",
+                holder: "com.caimao:lrc.x5.holder:$versions.lrc_x5_holder"
+        ],
+        banner      : "com.caimao:lrc.banner:$versions.lrc_banner"
+]
+def weight = [
+        skeleton: "com.caimao:weight-skeleton:$versions.skeleton",
+]
+def lazy = [
+        updater: "com.lazylibs:updater:$versions.lazy_updater",
+]
+// extra
+def okhttp = [
+        runtime            : "com.squareup.okhttp3:okhttp:$versions.okhttp",
+        urlconnection      : "com.squareup.okhttp3:okhttp-urlconnection:$versions.okhttp",
+        logging_interceptor: "com.squareup.okhttp3:logging-interceptor:$versions.okhttp",
+]
+def retrofit = [
+        runtime            : "com.squareup.retrofit2:retrofit:$versions.retrofit",
+        converter_gson     : "com.squareup.retrofit2:converter-gson:$versions.retrofit",
+        converter_simplexml: "com.squareup.retrofit2:converter-simplexml:$versions.retrofit",
+        adapter_rxjava     : "com.squareup.retrofit2:adapter-rxjava:$versions.retrofit",
+        adapter_rxjava2    : "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
+]
+def glide = [
+        runtime            : "com.github.bumptech.glide:glide:$versions.glide",
+        compiler           : "com.github.bumptech.glide:compiler:$versions.glide",
+        okhttp3_integration: "com.github.bumptech.glide:okhttp3-integration:$versions.glide",
+        transformations    : "jp.wasabeef:glide-transformations:$versions.glide_transformations",
+]
+def xcl_charts = "org.xclcharts:lib:$versions.xcl_charts"
+def rxandroid = "io.reactivex.rxjava2:rxandroid:$versions.rxandroid"
+def rxjava = "io.reactivex.rxjava2:rxjava:$versions.rxjava"
+def gson = "com.google.code.gson:gson:$versions.gson"
+def fastjson = "com.alibaba:fastjson:$versions.fastjson"
+def logger = "com.orhanobut:logger:$versions.logger"
+def gpuimage = "jp.co.cyberagent.android.gpuimage:gpuimage-library:$versions.gpuimage"
+def easypermissions = "pub.devrel:easypermissions:$versions.easypermissions"
+def photoView = "com.github.chrisbanes:PhotoView:$versions.photoView"
+def multitype = [
+        java: "me.drakeet.multitype:multitype:$versions.multitype",
+        ktx : "me.drakeet.multitype:multitype-ktx:$versions.multitype"
+]
+def smart_refresh = [
+        layout: "com.scwang.smartrefresh:SmartRefreshLayout:$versions.smart_refresh",
+        header: "com.scwang.smartrefresh:SmartRefreshHeader:$versions.smart_refresh",
+]
+def tencent = [
+        tbs_sdk: "com.tencent:tbs-sdk:$versions.tbs_sdk",
+]
+def kpswitch = "cn.dreamtobe.kpswitch:library:$versions.kpswitch"
+def paho = [
+        client_mqttv3  : "org.eclipse.paho:org.eclipse.paho.client.mqttv3:$versions.client_mqttv3",
+        android_service: "org.eclipse.paho:org.eclipse.paho.android.service:$versions.android_service",
+]
+// umeng
+def umeng = [
+        common   : "com.umeng.umsdk:common:$versions.umeng_common",
+        analytics: "com.umeng.umsdk:analytics:$versions.umeng_analytics",
+        utdid    : "com.umeng.umsdk:utdid:$versions.umeng_utdid",
+        share    : [
+                core  : "com.umeng.umsdk:share-core:$versions.umeng_share",
+                wechat: "com.umeng.umsdk:share-wx:$versions.umeng_share",
+                qq    : "com.umeng.umsdk:share-qq:$versions.umeng_share_qq",
+        ],
+        push     : [
+                base       : "com.umeng.umsdk:push:$versions.umeng_push",
+                huawei     : "com.umeng.umsdk:huawei-pushtb:$versions.umeng_push_huawei_pushtb",
+                huawei_base: "com.umeng.umsdk:huawei-basetb:$versions.umeng_push_huawei_basetb",
+                huawei_accs: "com.umeng.umsdk:huawei-umengaccs:$versions.umeng_push_huawei_umengaccs",
+                xiaomi     : "com.umeng.umsdk:xiaomi-push:$versions.umeng_push_xiaomi",
+                xiaomi_accs: "com.umeng.umsdk:xiaomi-umengaccs:$versions.umeng_push_xiaomi_umengaccs",
+                meizu      : "com.umeng.umsdk:meizu-push:$versions.umeng_push_meizu",
+                meizu_accs : "com.umeng.umsdk:meizu-umengaccs:$versions.umeng_push_meizu_umengaccs",
+                oppo       : "com.umeng.umsdk:oppo-push:$versions.umeng_push_oppo",
+                oppo_accs  : "com.umeng.umsdk:oppo-umengaccs:$versions.umeng_push_oppo_umengaccs",
+                vivo       : "com.umeng.umsdk:vivo-push:$versions.umeng_push_vivo",
+                vivo_accs  : "com.umeng.umsdk:vivo-umengaccs:$versions.umeng_push_vivo_umengaccs"
+        ]
+]
+def daimajia = [
+        easing           : "com.daimajia.easing:library:$versions.daimajia_easing",
+        androidanimations: "com.daimajia.androidanimations:library:$versions.daimajia_androidanimations",
+]
+def material_dialog = "me.drakeet.materialdialog:library:$versions.material_dialog"
+def bga = [
+        "banner": "cn.bingoogolapple:bga-banner:$versions.bga_banner",
+]
+def bindingcollectionadapter2 = [
+        bindingcollectionadapter             : "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter:$versions.bindingCollectionAdapter",
+        bindingcollectionadapter_recyclerview: "me.tatarka.bindingcollectionadapter2:bindingcollectionadapter-recyclerview:$versions.bindingCollectionAdapter",
+]
+// kotlin
+def kotlin = [
+        stdlib_jdk7       : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin",
+        test              : "org.jetbrains.kotlin:kotlin-test-junit:$versions.kotlin",
+        plugin            : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
+        android_extensions: "org.jetbrains.kotlin:kotlin-android-extensions:$versions.kotlin",
+        allopen           : "org.jetbrains.kotlin:kotlin-allopen:$versions.kotlin",
+]
+
+// test
+def leakcanary = [
+        android         : "com.squareup.leakcanary:leakcanary-android:$versions.leakcanary",
+        android_no_op   : "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakcanary",
+        support_fragment: "com.squareup.leakcanary:leakcanary-support-fragment:$versions.leakcanary",
+]
+def test = [
+        junit: "junit:junit:$versions.junit",
+]
+def androidTest = [
+        runner       : "androidx.test:runner:$versions.runner",
+        espresso_core: "androidx.test.espresso:espresso-core:$versions.espresso_core",
+]
+
+//def espresso = [
+//        "core"   : "androidx.test.espresso:espresso-core:$versions.espresso",
+//        "contrib": "androidx.test.espresso:espresso-contrib:$versions.espresso",
+//        "intents": "androidx.test.espresso:espresso-intents:$versions.espresso",
+//]
+//deps.espresso = espresso
+//
+//def atsl = [:]
+//atsl.runner = "androidx.test:runner:$versions.atsl_runner"
+//atsl.rules = "androidx.test:rules:$versions.atsl_runner"
+//deps.atsl = atsl
+//
+//def mockito = [:]
+//mockito.core = "org.mockito:mockito-core:$versions.mockito"
+//mockito.all = "org.mockito:mockito-all:$versions.mockito_all"
+//mockito.android = "org.mockito:mockito-android:$versions.mockito_android"
+//deps.mockito = mockito
+
+ext {
+    deps = [
+            android_gradle_plugin    : android_gradle_plugin,
+            // android components
+            lifecycle                : lifecycle,
+            room                     : room,
+            paging                   : paging,
+            navigation               : navigation,
+            work                     : work,
+            androidx                 : androidx,
+            // caimao
+            lrc                      : lrc,
+            weight                   : weight,
+            lazy                     : lazy,
+            // extra
+            okhttp                   : okhttp,
+            retrofit                 : retrofit,
+            rxandroid                : rxandroid,
+            rxjava                   : rxjava,
+            gson                     : gson,
+            fastjson                 : fastjson,
+            logger                   : logger,
+            glide                    : glide,
+            gpuimage                 : gpuimage,
+            // third-party
+            paho                     : paho,
+            umeng                    : umeng,
+            tencent                  : tencent,
+            xcl_charts               : xcl_charts,
+            // util
+            easypermissions          : easypermissions,
+            kpswitch                 : kpswitch,
+            // view
+            material_dialog          : material_dialog,
+            bga                      : bga,
+            daimajia                 : daimajia,
+            photoView                : photoView,
+            multitype                : multitype,
+            smart_refresh            : smart_refresh,
+            bindingcollectionadapter2: bindingcollectionadapter2,
+            // kotlin
+            kotlin                   : kotlin,
+            // test
+            leakcanary               : leakcanary,
+            test                     : test,
+            androidTest              : androidTest,
+    ]
+}
+
+static def addRepos(RepositoryHandler handler) {
+    handler.google()
+    handler.jcenter()
+    handler.maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
+ext.addRepos = this.&addRepos

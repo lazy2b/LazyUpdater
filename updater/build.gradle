@@ -32,8 +32,8 @@ android {
 }
 
 dependencies {
-    implementation deps.support.v4
-    implementation deps.support.appcompat
+    implementation deps.androidx.v4
+    implementation deps.androidx.appcompat
     implementation deps.okhttp.runtime
 }
 ////Copy类型

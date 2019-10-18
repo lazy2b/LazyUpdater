@@ -2,17 +2,21 @@ package com.lazy2b.demo;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.alibaba.fastjson.JSON;
 import com.lazylibs.updater.SimpleVersionHelperListener;
 import com.lazylibs.updater.VersionUpdateHelper;
+import com.lazylibs.updater.interfaces.DownloadWay;
 import com.lazylibs.updater.interfaces.IUpgradeModel;
 
+import java.io.File;
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -29,9 +33,43 @@ public class UpdateActivity extends AppCompatActivity {
     IUpgradeModel vModel;
 
     VersionUpdateHelper vHelper;
+    void print() {
+        new Thread(new Runnable() {
+            String Tag = "FileChooser";
 
+            void printFile(File file) {
+                if (file != null && file.exists()) {
+                    Log.e(Tag,
+                            "\nr:" + file.canRead() + "|w:" + file.canWrite()
+                                    + "\n" + file.toString() + "\n" +
+                                    FileProvider.getUriForFile(UpdateActivity.this,
+                                            getPackageName() + ".provider",
+                                            file).toString()
+                    );
+//                    File[] childs = file.listFiles();
+//                    if (childs != null && childs.length > 0) {
+//                        Log.e(Tag, "childs:");
+//                        for (File child : childs) {
+//                            printFile(child);
+//                        }
+//                    }
+                }
+            }
+
+            @Override
+            public void run() {
+//                printFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
+//                printFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM));
+//                printFile(Environment.getRootDirectory());
+//                printFile(Environment.getDownloadCacheDirectory());
+//                printFile(Environment.getDataDirectory());
+//                printFile(Environment.getExternalStorageDirectory());
+            }
+        }).start();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+//        print();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tv_check = findViewById(R.id.tv_check);
@@ -151,7 +189,7 @@ public class UpdateActivity extends AppCompatActivity {
                                 @Override
                                 public void sConnectState(int state) {
                                     if (state == 1) {
-                                        vHelper.doHasVersionModel(vModel, 2);
+                                        vHelper.doHasVersionModel(vModel, DownloadWay.defaultWay);
                                     } else {
                                         vHelper = null;
                                     }
@@ -169,7 +207,7 @@ public class UpdateActivity extends AppCompatActivity {
                 .build()
                 .newCall(
                         new Request.Builder()
-                                .url("https://appapi.byyapp.com/api/app/version?id=378")
+                                .url("https://appapi.byyjp.com/api/app/version?id=378")
                                 .get()
                                 .build()
                 )

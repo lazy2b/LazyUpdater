@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.ValueCallback;
@@ -13,13 +14,50 @@ import android.webkit.WebView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+
+import java.io.File;
 
 
-public class Main2Activity extends AppCompatActivity {
+public class Main2Activity extends Activity {
+    void print() {
+        new Thread(new Runnable() {
+            String Tag = "FileChooser";
+
+            void printFile(File file) {
+                if (file != null && file.exists()) {
+                    Log.e(Tag,
+                            "\nr:" + file.canRead() + "|w:" + file.canWrite()
+                                    + "\n" + file.toString() + "\n" +
+                                    FileProvider.getUriForFile(Main2Activity.this,
+                                            getPackageName() + ".provider",
+                                            file).toString()
+                    );
+//                    File[] childs = file.listFiles();
+//                    if (childs != null && childs.length > 0) {
+//                        Log.e(Tag, "childs:");
+//                        for (File child : childs) {
+//                            printFile(child);
+//                        }
+//                    }
+                }
+            }
+
+            @Override
+            public void run() {
+                printFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES));
+                printFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM));
+//                printFile(Environment.getRootDirectory());
+//                printFile(Environment.getDownloadCacheDirectory());
+//                printFile(Environment.getDataDirectory());
+//                printFile(Environment.getExternalStorageDirectory());
+            }
+        }).start();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        print();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         WebView webView = findViewById(R.id.webview);

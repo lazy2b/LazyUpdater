@@ -28,6 +28,9 @@ import com.lazylibs.updater.view.DownloadProgressDialogFragment;
 import java.io.File;
 
 public class VersionUpdateHelper implements ServiceConnection {
+
+    public static final String FILE_PROVIDER = ".update.provider";
+
     private Context mContext;
     private Handler mHandler;
     private AlertDialog mNewVersionDialog;
@@ -203,7 +206,7 @@ public class VersionUpdateHelper implements ServiceConnection {
         if (!TextUtils.isEmpty(apk.getAbsolutePath())) {
             VersionUpdateUtils.chmod(apk.getAbsolutePath());
             postDelayed(() -> {
-                VersionUpdateUtils.installApp(mContext.getApplicationContext(), apk, mContext.getPackageName() + ".update.provider");
+                VersionUpdateUtils.installApp(mContext.getApplicationContext(), apk, mContext.getPackageName() + FILE_PROVIDER);
                 postDelayed(() -> clear(VersionUpdateHelper.this, UpdateResult.Success), 10);
             }, 10);
         }
