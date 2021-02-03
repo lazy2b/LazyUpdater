@@ -6,8 +6,9 @@ apply plugin: 'com.android.library'
 // ->v0.0.5&c5->20190705
 // ->v0.0.6789&c6789->20190731
 // ->v1.0.0c12
-def verName = '1.0.0'
-def verCode = 12
+// ->v1.1.0c13toAndroidX
+def verName = '2.0.0'
+def verCode = 14
 
 android {
     buildToolsVersion config.buildToolsVersion
@@ -68,7 +69,7 @@ task generateJavadocsJar(type: Jar) {//打包生成的JavaDocs为Jar
     classifier 'javadoc'
 }
 generateJavadocsJar.dependsOn generateJavadocs//保证生成JavaDocsJar在生成JavaDocs之后执行
-artifacts {//配置要上传到软件仓库的代码排泄物
+artifacts {//配置要上传到软件仓库的代码
     archives generateJavadocsJar
     archives generateSourcesJar
 }
@@ -82,7 +83,7 @@ bintray {//软件仓库所需配置信息
         name = 'updater' //必须，包名
         version {
             name = verName //版本名称
-            desc = '添加其他下载更新接口' //版本描述
+            desc = 'toAndroidX' //版本描述
             //released  =new Date() //上传过程中如果此处报错，可以注释掉此句
             vcsTag = verName //版本
         }

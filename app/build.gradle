@@ -26,5 +26,6 @@ dependencies {
     implementation deps.okhttp.runtime
     implementation deps.fastjson
     implementation deps.androidx.constraintlayout
-    implementation project(':updater')
+    implementation 'com.lazylibs:updater:2.0.0'
+//    implementation project(':updater')
 }
