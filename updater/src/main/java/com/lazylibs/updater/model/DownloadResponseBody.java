@@ -15,9 +15,9 @@ import okio.Source;
 
 
 public class DownloadResponseBody extends ResponseBody {
-    private ResponseBody responseBody;
+    private final ResponseBody responseBody;
     private BufferedSource bufferedSource;
-    private DownloadProgressListener progressListener;
+    private final DownloadProgressListener progressListener;
     private DownloadProgress.ProgressBuilder progressBuilder;
 
     public DownloadResponseBody(ResponseBody responseBody, DownloadProgressListener progressListener) {

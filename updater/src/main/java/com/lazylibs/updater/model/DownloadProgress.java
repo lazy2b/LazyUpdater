@@ -5,7 +5,7 @@ package com.lazylibs.updater.model;
  */
 
 public class DownloadProgress {
-    private int progress;
+    private final int progress;
 
     DownloadProgress(int progress) {
         this.progress = progress;
@@ -18,7 +18,7 @@ public class DownloadProgress {
     static class ProgressBuilder {
         static final int DOWNLOAD_PROGRESS_STEP = 2;
         long current = 0L;
-        long step = -1L;
+        long step;
         int lastProgress = 1;
         int currProgress = 0;
 

@@ -26,7 +26,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+
 public class VersionUpdateService extends Service {
+    public interface OnDestroyListener {
+        void onDestroy();
+    }
+
     private static final int NOTIFICATION_ID = 100;
     private boolean mDownLoading = false;
     private NotificationManager mNotificationManager;
@@ -38,8 +43,8 @@ public class VersionUpdateService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mNotificationManager != null)
-            mNotificationManager.cancelAll();
+        if (mOnDestroyListener != null) mOnDestroyListener.onDestroy();
+        if (mNotificationManager != null) mNotificationManager.cancelAll();
         mDownLoading = false;
     }
 
@@ -58,8 +63,7 @@ public class VersionUpdateService extends Service {
 //                new Intent(this, MainActivity.class), 0);
         if (Build.VERSION.SDK_INT >= 26) {
             //ChannelId为"1",ChannelName为"Channel1"
-            NotificationChannel channel = new NotificationChannel("1",
-                    getString(R.string.updater_download), NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel("1", getString(R.string.updater_download), NotificationManager.IMPORTANCE_DEFAULT);
             channel.enableVibration(false);
             channel.enableLights(false);
 //            channel.setSound();
@@ -121,26 +125,17 @@ public class VersionUpdateService extends Service {
             protected File doInBackground(String... args) {
                 try {
                     // 过滤器，做下载进度
-                    Interceptor interceptor =
-                            new Interceptor() {
-                                @Override
-                                public Response intercept(Chain chain) throws IOException {
-                                    Response originalResponse = chain.proceed(chain.request());
-                                    return originalResponse.newBuilder()
-                                            .body(
-                                                    new DownloadResponseBody(
-                                                            originalResponse.body(),
-                                                            progress -> {
-                                                                if (progress == null)
-                                                                    return;
-                                                                listener.updateProgress(progress);
-                                                                updateNotification(progress.getProgress());
-                                                            }
-                                                    )
-                                            )
-                                            .build();
-                                }
-                            };
+                    Interceptor interceptor = new Interceptor() {
+                        @Override
+                        public Response intercept(Chain chain) throws IOException {
+                            Response originalResponse = chain.proceed(chain.request());
+                            return originalResponse.newBuilder().body(new DownloadResponseBody(originalResponse.body(), progress -> {
+                                if (progress == null) return;
+                                listener.updateProgress(progress);
+                                updateNotification(progress.getProgress());
+                            })).build();
+                        }
+                    };
                     OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(interceptor).build();
                     Request request = new Request.Builder().url(args[0]).get().build();
                     Response response = httpClient.newCall(request).execute();
@@ -172,6 +167,13 @@ public class VersionUpdateService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return new VersionUpdateBinder();
+    }
+
+    private OnDestroyListener mOnDestroyListener;
+
+    public VersionUpdateService setOnDestroyListener(OnDestroyListener destroyListener) {
+        this.mOnDestroyListener = destroyListener;
+        return this;
     }
 
     class VersionUpdateBinder extends Binder {

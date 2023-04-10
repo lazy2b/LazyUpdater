@@ -1,5 +1,6 @@
 package com.lazylibs.updater;
 
+
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -27,7 +28,7 @@ import com.lazylibs.updater.view.DownloadProgressDialogFragment;
 
 import java.io.File;
 
-public class VersionUpdateHelper implements ServiceConnection {
+public class VersionUpdateHelper implements ServiceConnection, VersionUpdateService.OnDestroyListener {
 
     public static final String FILE_PROVIDER = ".update.provider";
 
@@ -70,6 +71,13 @@ public class VersionUpdateHelper implements ServiceConnection {
          */
         void vHelperCallBack(UpdateResult result);
 
+        /**
+         * 是否需要其他下载渠道
+         * <br/>1 默认使用浏览器跳转并下载
+         * <br/>2 可自定义，见：{@link #anotherWay(Context, IUpgradeModel)}
+         *
+         * @return
+         */
         default boolean isAnotherWay() {
             return false;
         }
@@ -82,12 +90,7 @@ public class VersionUpdateHelper implements ServiceConnection {
         default boolean anotherWay(Context context, IUpgradeModel upgrade) {
             if (context == null || TextUtils.isEmpty(upgrade.getDownloadUrl())) return true;
             try {
-                context.startActivity(
-                        new Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse(upgrade.getDownloadUrl())
-                        ).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                );
+                context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(upgrade.getDownloadUrl())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             } catch (Exception e) {
                 Toast.makeText(context, R.string.updater_no_browser, Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
@@ -137,7 +140,7 @@ public class VersionUpdateHelper implements ServiceConnection {
         this.isToast = toast;
     }
 
-    public void doHasVersionModel(IUpgradeModel vModel, @DownloadWay int... downloadWay) {
+    public void doUpdateNow(IUpgradeModel vModel, @DownloadWay int... downloadWay) {
         if (vModel == null || isWaitForUpdate() || isWaitForDownload() || !isInitialization) {
             return;
         }
@@ -152,6 +155,18 @@ public class VersionUpdateHelper implements ServiceConnection {
             this.downloadWay = downloadWay[0];
         }
         updateNow();
+    }
+
+    public void doHasVersionModel(IUpgradeModel vModel, @DownloadWay int... downloadWay) {
+        if (vModel == null || isWaitForUpdate() || isWaitForDownload() || !isInitialization) {
+            return;
+        }
+        mVersionModel = vModel;
+        mVersionModel.setNeedUpgrade(VersionUpdateUtils.getAppVersionName(mUpdateService));
+        if (downloadWay != null && downloadWay.length > 0) {
+            this.downloadWay = downloadWay[0];
+        }
+        doHasVersionModel();
     }
 
     private void doHasVersionModel() {
@@ -252,37 +267,29 @@ public class VersionUpdateHelper implements ServiceConnection {
         builder.setMessage(mVersionModel.getUpdateInfo());
         //当点确定按钮时从服务器上下载新的apk 然后安装
         if (mHelperCallBack != null && mHelperCallBack.isAnotherWay()) {
-            builder.setPositiveButton(R.string.updater_another_way,
-                    (dialog, which) -> {
-                        dialog.cancel();
-                        downloadWay = DownloadWay.anotherWay;
-                        updateNow();
-                    }
-            );
-            builder.setNegativeButton(R.string.updater_update_now,
-                    (dialog, which) -> {
-                        dialog.cancel();
-                        downloadWay = DownloadWay.defaultWay;
-                        updateNow();
-                    }
-            );
+            builder.setPositiveButton(R.string.updater_another_way, (dialog, which) -> {
+                dialog.cancel();
+                downloadWay = DownloadWay.anotherWay;
+                updateNow();
+            });
+            builder.setNegativeButton(R.string.updater_update_now, (dialog, which) -> {
+                dialog.cancel();
+                downloadWay = DownloadWay.defaultWay;
+                updateNow();
+            });
         } else {
-            builder.setPositiveButton(R.string.updater_update_now,
-                    (dialog, which) -> {
-                        dialog.cancel();
-                        downloadWay = DownloadWay.defaultWay;
-                        updateNow();
-                    }
-            );
+            builder.setPositiveButton(R.string.updater_update_now, (dialog, which) -> {
+                dialog.cancel();
+                downloadWay = DownloadWay.defaultWay;
+                updateNow();
+            });
         }
         if (!mVersionModel.isForceUpdate()) {
-            builder.setNeutralButton(R.string.updater_dont_update,
-                    (dialog, which) -> {
-                        dialog.cancel();
-                        downloadWay = DownloadWay.cancel;
-                        clear(VersionUpdateHelper.this, UpdateResult.Cancel);
-                    }
-            );
+            builder.setNeutralButton(R.string.updater_dont_update, (dialog, which) -> {
+                dialog.cancel();
+                downloadWay = DownloadWay.cancel;
+                clear(VersionUpdateHelper.this, UpdateResult.Cancel);
+            });
         }
         builder.setCancelable(false);
         return builder.create();
@@ -303,42 +310,38 @@ public class VersionUpdateHelper implements ServiceConnection {
                 doDownloadApkSuccess(apkFile);
             } else {
                 VersionUpdateUtils.cleanApk(apkDir);
-                mUpdateService.downloadApk(
-                        mVersionModel.getDownloadUrl(),
-                        apkName,
-                        new DownloadApkListener() {
-                            @Override
-                            public void onStart() {
-                                if (mContext != null && mContext instanceof FragmentActivity) {
-                                    if (mDownloadProgressDialogFragment == null) {
-                                        mDownloadProgressDialogFragment = DownloadProgressDialogFragment.newInstance(mVersionModel.isForceUpdate());
-                                    }
-                                    mDownloadProgressDialogFragment.show(((FragmentActivity) mContext).getSupportFragmentManager(), "loading");
-                                }
+                mUpdateService.downloadApk(mVersionModel.getDownloadUrl(), apkName, new DownloadApkListener() {
+                    @Override
+                    public void onStart() {
+                        if (mContext != null && mContext instanceof FragmentActivity) {
+                            if (mDownloadProgressDialogFragment == null) {
+                                mDownloadProgressDialogFragment = DownloadProgressDialogFragment.newInstance(mVersionModel.isForceUpdate());
                             }
-
-                            @Override
-                            public void onSuccess(File apk) {
-                                if (mDownloadProgressDialogFragment != null)
-                                    mDownloadProgressDialogFragment.dismissAllowingStateLoss();
-                                doDownloadApkSuccess(apk);
-                            }
-
-                            @Override
-                            public void onError(Throwable throwable) {
-                                if (mDownloadProgressDialogFragment != null)
-                                    mDownloadProgressDialogFragment.dismissAllowingStateLoss();
-                                clear(VersionUpdateHelper.this, UpdateResult.Error);
-                            }
-
-                            @Override
-                            public void updateProgress(DownloadProgress progress) {
-                                if (mDownloadProgressDialogFragment != null) {
-                                    mDownloadProgressDialogFragment.updateProgress(progress);
-                                }
-                            }
+                            mDownloadProgressDialogFragment.show(((FragmentActivity) mContext).getSupportFragmentManager(), "loading");
                         }
-                );
+                    }
+
+                    @Override
+                    public void onSuccess(File apk) {
+                        if (mDownloadProgressDialogFragment != null)
+                            mDownloadProgressDialogFragment.dismissAllowingStateLoss();
+                        doDownloadApkSuccess(apk);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        if (mDownloadProgressDialogFragment != null)
+                            mDownloadProgressDialogFragment.dismissAllowingStateLoss();
+                        clear(VersionUpdateHelper.this, UpdateResult.Error);
+                    }
+
+                    @Override
+                    public void updateProgress(DownloadProgress progress) {
+                        if (mDownloadProgressDialogFragment != null) {
+                            mDownloadProgressDialogFragment.updateProgress(progress);
+                        }
+                    }
+                });
             }
         }
     }
@@ -351,6 +354,29 @@ public class VersionUpdateHelper implements ServiceConnection {
             mContext.bindService(new Intent(mContext, VersionUpdateService.class), this, Context.BIND_AUTO_CREATE);
         }
         return this;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mDownloadProgressDialogFragment != null) {
+            mDownloadProgressDialogFragment.dismissAllowingStateLoss();
+        }
+        if (mNewVersionDialog != null && mNewVersionDialog.isShowing()) {
+            mNewVersionDialog.cancel();
+        }
+        if (mHandler != null) {
+            mHandler.removeCallbacks(null);
+            mHandler = null;
+        }
+        mDownloadProgressDialogFragment = null;
+        mNewVersionDialog = null;
+        mUpdateService = null;
+        mVersionModel = null;
+        mContext = null;
+        if (mHelperCallBack != null) {
+            mHelperCallBack.sConnectState(0);
+        }
+        mHelperCallBack = null;
     }
 
     private boolean unbindService() {
@@ -374,6 +400,9 @@ public class VersionUpdateHelper implements ServiceConnection {
     @Override
     public void onServiceConnected(ComponentName name, IBinder binder) {
         mUpdateService = ((VersionUpdateService.VersionUpdateBinder) binder).getService();
+        if (mUpdateService != null) {
+            mUpdateService.setOnDestroyListener(this);
+        }
         isInitialization = true;
         if (mVersionModel != null) {
             mVersionModel.setNeedUpgrade(VersionUpdateUtils.getAppVersionName(mUpdateService));
@@ -386,24 +415,6 @@ public class VersionUpdateHelper implements ServiceConnection {
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        if (mDownloadProgressDialogFragment != null) {
-            mDownloadProgressDialogFragment.dismissAllowingStateLoss();
-        }
-        if (mNewVersionDialog != null && mNewVersionDialog.isShowing()) {
-            mNewVersionDialog.cancel();
-        }
-        if (mHandler != null) {
-            mHandler.removeCallbacks(null);
-            mHandler = null;
-        }
-        mDownloadProgressDialogFragment = null;
-        mNewVersionDialog = null;
-        mUpdateService = null;
-        mVersionModel = null;
-        mContext = null;
-        if (mHelperCallBack != null) {
-            mHelperCallBack.sConnectState(0);
-        }
-        mHelperCallBack = null;
+        onDestroy();
     }
 }
