@@ -1,14 +1,13 @@
 apply plugin: 'com.android.library'
-//apply from: '../gradle-mvn-push.gradle'
- apply plugin: 'com.jfrog.bintray'
- apply plugin: 'com.github.dcendents.android-maven'
 
 // ->v0.0.5&c5->20190705
 // ->v0.0.6789&c6789->20190731
 // ->v1.0.0c12
 // ->v1.1.0c13toAndroidX
-def verName = '2.0.0'
-def verCode = 14
+// ->v2.0.0c14
+// ->v2.1.0c15
+def verName = '2.1.0'
+def verCode = 15
 
 android {
     buildToolsVersion config.buildToolsVersion
@@ -33,9 +32,8 @@ android {
 }
 
 dependencies {
-    implementation deps.androidx.v4
-    implementation deps.androidx.appcompat
-    implementation deps.okhttp.runtime
+    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "com.squareup.okhttp3:okhttp:3.11.0"
 }
 ////Copy类型
 //task makeJar(type: Copy) {
@@ -72,25 +70,5 @@ generateJavadocsJar.dependsOn generateJavadocs//保证生成JavaDocsJar在生成
 artifacts {//配置要上传到软件仓库的代码
     archives generateJavadocsJar
     archives generateSourcesJar
-}
-group = 'com.lazylibs'// library库包名
-version = verName /* 版本号 */
-bintray {//软件仓库所需配置信息
-    user = 'lazy2b' //bintray.com中账户名
-    key = 'e240d4573381134a1b12cdfba38b3d8cbe91ac90' //bintray.com中与账户对应的API key
-    pkg {//包信息
-        repo = 'maven' //必须设定一个值，这里选择maven
-        name = 'updater' //必须，包名
-        version {
-            name = verName //版本名称
-            desc = 'toAndroidX' //版本描述
-            //released  =new Date() //上传过程中如果此处报错，可以注释掉此句
-            vcsTag = verName //版本
-        }
-        licenses = ['Apache-2.0'] //开源协议
-        vcsUrl = 'https://github.com/lazy2b/LazyUpdater' //指定项目源码地址[git]
-        websiteUrl = 'http://www.lazy2b.com' //项目官网地址
-    }
-    configurations = ['archives'] //必须为archives
 }
 tasks.getByPath(":updater:generateJavadocs").enabled = false

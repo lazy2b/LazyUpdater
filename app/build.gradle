@@ -21,11 +21,10 @@ android {
 }
 
 dependencies {
-    implementation deps.androidx.v4
-    implementation deps.androidx.appcompat
-    implementation deps.okhttp.runtime
-    implementation deps.fastjson
-    implementation deps.androidx.constraintlayout
-    implementation 'com.lazylibs:updater:2.0.0'
-//    implementation project(':updater')
+    implementation "androidx.appcompat:appcompat:1.0.0"
+    implementation "com.squareup.okhttp3:okhttp:3.11.0"
+    implementation "com.alibaba:fastjson:1.1.70.android"
+    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
+//    implementation 'com.lazylibs:updater:2.0.0'
+    implementation project(':updater')
 }
