@@ -1,11 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    buildToolsVersion config.buildToolsVersion
-    compileSdkVersion config.compileSdkVersion
+    compileSdkVersion 32
     defaultConfig {
-        minSdkVersion config.minSdkVersion
-        targetSdkVersion config.targetSdkVerion
+        minSdkVersion 20
+        targetSdkVersion 31
         applicationId "com.lazy2b.demo.update"
         versionCode 1
         versionName "0.0.1"
@@ -17,14 +16,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions config.compileOptions
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    namespace 'com.lazy2b.demo'
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.0.0"
-    implementation "com.squareup.okhttp3:okhttp:3.11.0"
+    implementation "androidx.appcompat:appcompat:1.5.1"
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
     implementation "com.alibaba:fastjson:1.1.70.android"
-    implementation "androidx.constraintlayout:constraintlayout:1.1.3"
 //    implementation 'com.lazylibs:updater:2.0.0'
     implementation project(':updater')
 }

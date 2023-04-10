@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.lazy2b.demo"
     android:hardwareAccelerated="true">
 
     <supports-screens
@@ -25,7 +24,7 @@
         android:testOnly="false"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning,HardcodedDebugMode">
-        <activity android:name="com.lazy2b.demo.Main2Activity"></activity>
+        <activity android:name="com.lazy2b.demo.Main2Activity"/>
         <provider
             android:name="com.lazy2b.demo.CFileProvider"
             android:authorities="${applicationId}.provider"
@@ -35,7 +34,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/paths" />
         </provider>
-        <activity android:name="com.lazy2b.demo.UpdateActivity">
+        <activity android:exported="true" android:name="com.lazy2b.demo.UpdateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

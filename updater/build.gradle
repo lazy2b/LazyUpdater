@@ -10,13 +10,10 @@ def verName = '2.1.0'
 def verCode = 15
 
 android {
-    buildToolsVersion config.buildToolsVersion
-    compileSdkVersion config.compileSdkVersion
+
+    compileSdkVersion 32
     defaultConfig {
-        minSdkVersion config.minSdkVersion
-        targetSdkVersion config.targetSdkVerion
-        versionCode verCode
-        versionName verName
+        minSdkVersion 20
     }
 
     buildTypes {
@@ -28,12 +25,16 @@ android {
         }
     }
     resourcePrefix 'updater_'
-    compileOptions config.compileOptions
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    namespace 'com.lazylibs.updater'
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.0.0"
-    implementation "com.squareup.okhttp3:okhttp:3.11.0"
+    implementation "androidx.appcompat:appcompat:1.5.1"
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
 }
 ////Copy类型
 //task makeJar(type: Copy) {
