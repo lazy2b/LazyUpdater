@@ -108,15 +108,10 @@ public class VersionUpdateHelper implements ServiceConnection, VersionUpdateServ
     }
 
     public static void destroy(VersionUpdateHelper helper) {
-        if (helper != null) {
-            helper.vCallBack(UpdateResult.Destroy);
-            if (helper.unbindService()) {
-                helper = null;
-            }
-        }
+        clear(helper, UpdateResult.Destroy);
     }
 
-    private static void clear(VersionUpdateHelper helper, UpdateResult result) {
+    public static void clear(VersionUpdateHelper helper, UpdateResult result) {
         if (helper != null) {
             helper.vCallBack(result);
             if (helper.unbindService()) {
