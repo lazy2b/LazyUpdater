@@ -147,7 +147,7 @@ public class VersionUpdateHelper implements ServiceConnection, VersionUpdateServ
         mVersionModel = vModel;
         mVersionModel.setNeedUpgrade(VersionUpdateUtils.getAppVersionName(mUpdateService));
         if (!mVersionModel.isNeedUpgrade()) {
-            clear(VersionUpdateHelper.this, UpdateResult.Success);
+            clear(VersionUpdateHelper.this, UpdateResult.NoNews);
             return;
         }
         if (mContext == null) return;
@@ -175,7 +175,7 @@ public class VersionUpdateHelper implements ServiceConnection, VersionUpdateServ
             if (isToast) {
                 Toast.makeText(mContext, R.string.updater_no_new_version, Toast.LENGTH_SHORT).show();
             }
-            clear(VersionUpdateHelper.this, UpdateResult.Success);
+            clear(VersionUpdateHelper.this, UpdateResult.NoNews);
             return;
         }
 
@@ -183,7 +183,7 @@ public class VersionUpdateHelper implements ServiceConnection, VersionUpdateServ
             if (isToast) {
                 Toast.makeText(mContext, R.string.updater_no_new_version, Toast.LENGTH_SHORT).show();
             }
-            clear(VersionUpdateHelper.this, UpdateResult.Success);
+            clear(VersionUpdateHelper.this, UpdateResult.NoNews);
             return;
         }
 
