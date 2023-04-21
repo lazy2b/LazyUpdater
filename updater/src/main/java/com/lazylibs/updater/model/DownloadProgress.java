@@ -32,6 +32,7 @@ public class DownloadProgress {
 
         DownloadProgress get(long bytesRead) {
             current += bytesRead != -1 ? bytesRead : 0;
+            if (step <= 0) return null;
             currProgress = (int) (current / step);
             if (lastProgress < currProgress && currProgress % DOWNLOAD_PROGRESS_STEP == 0) {
                 lastProgress = currProgress;

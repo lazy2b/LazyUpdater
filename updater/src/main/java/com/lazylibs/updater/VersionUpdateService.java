@@ -25,6 +25,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 public class VersionUpdateService extends Service {
@@ -125,15 +126,17 @@ public class VersionUpdateService extends Service {
             protected File doInBackground(String... args) {
                 try {
                     // 过滤器，做下载进度
-                    Interceptor interceptor = new Interceptor() {
-                        @Override
-                        public Response intercept(Chain chain) throws IOException {
-                            Response originalResponse = chain.proceed(chain.request());
-                            return originalResponse.newBuilder().body(new DownloadResponseBody(originalResponse.body(), progress -> {
+                    Interceptor interceptor = chain -> {
+                        Response originalResponse = chain.proceed(chain.request());
+                        ResponseBody responseBody = originalResponse.body();
+                        if(responseBody!=null && responseBody.contentLength() > 0){
+                            return originalResponse.newBuilder().body(new DownloadResponseBody(responseBody, progress -> {
                                 if (progress == null) return;
                                 listener.updateProgress(progress);
                                 updateNotification(progress.getProgress());
                             })).build();
+                        } else {
+                            return originalResponse;
                         }
                     };
                     OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(interceptor).build();
