@@ -173,7 +173,7 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     void doCheckVersion(Callback callback) {
-        new OkHttpClient.Builder().build().newCall(new Request.Builder().url("https://appapi.byyjp.com/api/app/version?id=378").get().build()).enqueue(callback);
+        new OkHttpClient.Builder().build().newCall(new Request.Builder().url("https://raw.githubusercontent.com/lazy2b/LazyUpdater/master/version.json").get().build()).enqueue(callback);
     }
 
     void tips(String msg) {
