@@ -28,7 +28,7 @@ import okhttp3.ResponseBody;
 
 public class UpdateActivity extends AppCompatActivity {
 
-    TextView tv_check;
+    TextView tv_check, tv_version;
 
     IUpgradeModel vModel;
 
@@ -40,6 +40,8 @@ public class UpdateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tv_check = findViewById(R.id.tv_check);
+        tv_version = findViewById(R.id.tv_version);
+        tv_version.setText(String.format("v%s", VersionUpdateUtils.getAppVersionName(UpdateActivity.this)));
         doCheckVersion(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

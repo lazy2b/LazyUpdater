@@ -3,15 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context="com.lazy2b.demo.UpdateActivity">
 
     <TextView
         android:id="@+id/tv_check"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="@string/download_now" />
+
+    <TextView
+        android:id="@+id/tv_version"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="14dp"
+        android:text=""/>
 
 </LinearLayout>
