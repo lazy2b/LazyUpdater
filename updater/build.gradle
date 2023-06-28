@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: '../mvn-gradle8.0.gradle'
 
 // ->v0.0.5&c5->20190705
 // ->v0.0.6789&c6789->20190731
