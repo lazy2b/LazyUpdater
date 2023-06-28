@@ -1,1 +1,1 @@
-{"packageName":"com.lazy2b.demo.update","version":"1.0.0","upgradeContent":"some optimization...","downloadPath":"https://github.com/lazy2b/LazyUpdater/releases/download/2.2.2/app-debug.apk","forceUpgrade":0,"forceUpgradeVersionList":[]}
+{"packageName":"com.lazy2b.demo.update","version":"1.0.0","upgradeContent":"some optimization...","downloadPath":"https://github.com/lazy2b/LazyUpdater/releases/download/2.2.2/app-debug.apk","forceUpgrade":false}

@@ -6,8 +6,8 @@ android {
         minSdkVersion 20
         targetSdkVersion 31
         applicationId "com.lazy2b.demo.update"
-        versionCode 2
-        versionName "1.0.0"
+        versionCode 1
+        versionName "0.0.1"
         multiDexEnabled true
     }
     buildTypes {
@@ -28,7 +28,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
     implementation "com.alibaba:fastjson:1.1.70.android"
 //    implementation 'com.lazylibs:updater:2.0.0'
-    implementation 'com.lazylibs:updater:0.0.1-SNAPSHOT'
+//    implementation 'com.lazylibs:updater:0.0.1-SNAPSHOT'
 
-//    implementation project(':updater')
+    implementation project(':updater')
 }

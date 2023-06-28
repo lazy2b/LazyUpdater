@@ -16,6 +16,8 @@ import com.lazylibs.updater.interfaces.IUpgradeModel;
 import com.lazylibs.updater.utils.VersionUpdateUtils;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -65,9 +67,11 @@ public class UpdateActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            String version = VersionUpdateUtils.getAppVersionName(UpdateActivity.this);
+                            vModel.setNeedUpgrade(version);
                             if (vModel.isNeedUpgrade()) {
-                                doSimpleSystemApkDownload(vModel.getNewVersionName(), VersionUpdateUtils.getAppVersionName(UpdateActivity.this), vModel.getDownloadUrl());
-                                doCustomizationApkDownload();
+                                doSimpleSystemApkDownload(vModel.getNewVersionName(), version, vModel.getDownloadUrl());
+//                                doCustomizationApkDownload();
                             }
                         }
                     });
@@ -173,7 +177,14 @@ public class UpdateActivity extends AppCompatActivity {
     }
 
     void doCheckVersion(Callback callback) {
-        new OkHttpClient.Builder().build().newCall(new Request.Builder().url("https://raw.githubusercontent.com/lazy2b/LazyUpdater/master/version").get().build()).enqueue(callback);
+        new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .callTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .build()
+                .newCall(new Request.Builder().url("https://raw.githubusercontent.com/lazy2b/LazyUpdater/master/version").get().build())
+                .enqueue(callback);
     }
 
     void tips(String msg) {

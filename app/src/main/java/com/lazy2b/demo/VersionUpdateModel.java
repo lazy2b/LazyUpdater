@@ -11,24 +11,16 @@ import com.lazylibs.updater.interfaces.IUpgradeModel;
 
 public class VersionUpdateModel implements IUpgradeModel {
 
-    @JSONField(name = "appId")
-    public int appId = 0;
     @JSONField(name = "version")
     public String version = "";
-    @JSONField(name = "appUrl")
-    public String appUrl = "";
-    @JSONField(name = "packageUrl")
+    @JSONField(name = "packageName")
+    public String packageName = "";
+    @JSONField(name = "downloadPath")
     public String packageUrl = "";
-    @JSONField(name = "appStoreUrl")
-    public String appStoreUrl = "";
-    @JSONField(name = "updateInfo")
+    @JSONField(name = "upgradeContent")
     public String updateInfo = "";
-    @JSONField(name = "IsForceUpdate")
+    @JSONField(name = "forceUpgrade")
     public boolean isForceUpdate = false;
-    @JSONField(name = "Notice")
-    public String notice = "";
-    @JSONField(name = "PackageSize")
-    public String packageSize = "";
 
     @JSONField(name = "isNeedUpgrade")
     private boolean isNeedUpgrade = false;
