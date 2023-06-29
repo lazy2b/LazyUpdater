@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply from: 'https://raw.githubusercontent.com/lazy2b/android-publish/main/mvn-gradle8.0.gradle'
 
 android {
-
+    namespace 'com.lazylibs.updater'
     compileSdkVersion 32
     defaultConfig {
         minSdkVersion 20
@@ -11,10 +11,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'com.lazylibs.updater'
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:1.5.1"
-    implementation "com.squareup.okhttp3:okhttp:4.10.0"
 }

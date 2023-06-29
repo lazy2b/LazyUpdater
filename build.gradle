@@ -3,21 +3,13 @@
 buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
     repositories {
         maven() {
             url "https://jitpack.io"
         }
         maven() {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
-        maven() {
             url "https://s01.oss.sonatype.org/content/repositories/snapshots"
-        }
-        maven {
-            url "https://plugins.gradle.org/m2/"
         }
         mavenCentral()
         google()
@@ -30,13 +22,7 @@ allprojects {
             url "https://jitpack.io"
         }
         maven() {
-            url "https://oss.sonatype.org/content/repositories/snapshots"
-        }
-        maven() {
             url "https://s01.oss.sonatype.org/content/repositories/snapshots"
-        }
-        maven {
-            url "https://plugins.gradle.org/m2/"
         }
         mavenCentral()
         google()
